@@ -19,20 +19,24 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
     name = name ?? data?.name;
 
     double apiVersion = 1.6;
-    Array skus = null;
+    JArray skus = null;
+    string skuId = null;
     string clientId = GetEnvironmentVariable("clientId");
-    log.Info(clientId);
     string clientSecret = GetEnvironmentVariable("clientSecret");
     string tenantId = GetEnvironmentVariable("tenantId");
 
     string token = AuthenticationHelperRest.AcquireTokenBySpn(tenantId, clientId, clientSecret);
-    log.Info(token);
     string bearerToken = "Bearer " + token;
-    log.Info(bearerToken);
 
-    //skus = LicensingHelper.GetO365Skus(apiVersion, bearerToken);
+    skus = LicensingHelper.GetO365Skus(apiVersion, bearerToken);
 
-    //Console.WriteLine(skus);
+    for (int i = 0; i < skus.Count; i++)
+    {
+
+        JObject skuObject = (JObject)skus[i];
+        skuId = (string)skuObject["skuId"];
+        log.Info(skuId);
+    }
 
 
     return name == null

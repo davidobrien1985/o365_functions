@@ -5,11 +5,9 @@ using Newtonsoft.Json.Linq;
 
 public class LicensingHelper
 {
-    public static Array GetO365Skus(double apiVersion, string apiToken)
+    public static JArray GetO365Skus(double apiVersion, string apiToken)
     {
-        string skusList = null;
         var uri = $"https://graph.windows.net/myorganization/subscribedSkus?api-version={apiVersion}";
-        Console.WriteLine(uri);
 
         WebRequest request = WebRequest.Create(uri);
         request.Method = "GET";
@@ -30,9 +28,6 @@ public class LicensingHelper
         }
 
         JObject jObject = JObject.Parse(responseContent);
-
-        return (Array)jObject["value"];
-
-        //return skusList;
+        return (JArray)jObject["value"];
     }
 }
