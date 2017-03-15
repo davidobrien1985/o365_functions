@@ -26,6 +26,7 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
     string tenantId = GetEnvironmentVariable("tenantId");
 
     string token = AuthenticationHelperRest.AcquireTokenBySpn(tenantId, clientId, clientSecret);
+    log.Info(token);
     string bearerToken = "Bearer " + token;
     log.Info(bearerToken);
 
@@ -41,6 +42,5 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
 
 public static string GetEnvironmentVariable(string name)
 {
-return name + ": " +
-System.Environment.GetEnvironmentVariable(name, EnvironmentVariableTarget.Process);
+return System.Environment.GetEnvironmentVariable(name, EnvironmentVariableTarget.Process);
 }
