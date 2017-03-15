@@ -1,7 +1,7 @@
 ﻿#load "shared_classes/AuthenticationHelperRest.csx"
 #load "shared_classes/LicensingHelper.csx"
 using System.Net;
-
+using Newtonsoft.Json.Linq;
 
 public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceWriter log)
 {
