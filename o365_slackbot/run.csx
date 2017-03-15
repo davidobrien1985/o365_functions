@@ -21,6 +21,7 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
     double apiVersion = 1.6;
     Array skus = null;
     string clientId = GetEnvironmentVariable("clientId");
+    log.Info(clientId);
     string clientSecret = GetEnvironmentVariable("clientSecret");
     string tenantId = GetEnvironmentVariable("tenantId");
 
