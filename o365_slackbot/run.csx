@@ -42,7 +42,7 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
 
         if ((string)skuObject["skuPartNumber"] == "ENTERPRISEPACK")
         {
-            if ((int)(string)skuObject["consumedUnits"] <= (int)(string)skuObject["prepaidUnits.enabled"])
+            if ((int)skuObject["consumedUnits"] <= (int)skuObject["prepaidUnits.enabled"])
             {
                 addSkuId = skuId;
             }
