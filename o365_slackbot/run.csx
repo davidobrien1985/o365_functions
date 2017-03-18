@@ -22,6 +22,8 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
     double apiVersion = 1.6;
     JArray skus = null; 
     string skuId = null;
+    string addSkuId = null;
+    string removeSkuId = null;
     string clientId = GetEnvironmentVariable("clientId");
     string clientSecret = GetEnvironmentVariable("clientSecret");
     string tenantId = GetEnvironmentVariable("tenantId");
@@ -40,7 +42,7 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
 
         if ((string)skuObject["skuPartNumber"] == "ENTERPRISEPACK")
         {
-            if ((string)skuObject["consumedUnits"] <= (string)skuObject["prepaidUnits.enabled"])
+            if ((int)(string)skuObject["consumedUnits"] <= (int)(string)skuObject["prepaidUnits.enabled"])
             {
                 addSkuId = skuId;
             }
