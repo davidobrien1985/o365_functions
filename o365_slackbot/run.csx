@@ -2,25 +2,26 @@
 #load "shared_classes/LicensingHelper.csx"
 using System.Net;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceWriter log)
 {
     log.Info($"C# HTTP trigger function processed a request. RequestUri={req.RequestUri}");
 
     // parse query parameter
-    string name = req.GetQueryNameValuePairs()
-        .FirstOrDefault(q => string.Compare(q.Key, "name", true) == 0)
+    string user = req.GetQueryNameValuePairs()
+        .FirstOrDefault(q => string.Compare(q.Key, "user", true) == 0)
         .Value;
 
     // Get request body
     dynamic data = await req.Content.ReadAsAsync<object>();
 
     // Set name to query string or body data
-    name = name ?? data?.name;
+    user = user ?? data?.user;
 
     double apiVersion = 1.6;
     JArray skus = null;
-    string skuId = null;
+    internal string skuId = null;
     string clientId = GetEnvironmentVariable("clientId");
     string clientSecret = GetEnvironmentVariable("clientSecret");
     string tenantId = GetEnvironmentVariable("tenantId");
@@ -34,12 +35,28 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
     {
 
         JObject skuObject = (JObject)skus[i];
+
         skuId = (string)skuObject["skuId"];
-        log.Info(skuId);
+
+        if ((string)skuObject["skuPartNumber"] == "ENTERPRISEPACK")
+        {
+            if ((string)skuObject["consumedUnits"] <= (string)skuObject["prepaidUnits.enabled"])
+            {
+                addSkuId = skuId;
+            }
+        }
+        if ((string)skuObject["skuPartNumber"] == "STANDARDPACK")
+        {
+            removeSkuId = skuId;
+        }
     }
 
+    Console.WriteLine(addSkuId);
+    Console.WriteLine(removeSkuId);
+    LicensingHelper.SetO365LicensingInfo(apiVersion, bearerToken, user, addSkuId, removeSkuId);
 
-    return name == null
+
+    return user == null
         ? req.CreateResponse(HttpStatusCode.BadRequest, "Please pass a name on the query string or in the request body")
         : req.CreateResponse(HttpStatusCode.OK, skus);
 }
