@@ -7,17 +7,26 @@ using Newtonsoft.Json;
 public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceWriter log)
 {
     log.Info($"C# HTTP trigger function processed a request. RequestUri={req.RequestUri}");
-    log.Info($"{req}");
-    // parse query parameter
-    string user = req.GetQueryNameValuePairs()
-        .FirstOrDefault(q => string.Compare(q.Key, "user", true) == 0)
-        .Value;
 
-    // Get request body
-    dynamic data = await req.Content.ReadAsAsync<object>();
+    var queryParams = req.GetQueryNameValuePairs()
+        .ToDictionary(p => p.Key, p => p.Value, StringComparer.OrdinalIgnoreCase);
 
-    // Set name to query string or body data
-    user = user ?? data?.user;
+    HttpResponseMessage res = null;
+    string user;
+    if (queryParams.TryGetValue("user", out user))
+    {
+        res = new HttpResponseMessage(HttpStatusCode.OK)
+        {
+            Content = new StringContent("Hello " + user)
+        };
+    }
+    else
+    {
+        res = new HttpResponseMessage(HttpStatusCode.BadRequest)
+        {
+            Content = new StringContent("Please pass a name on the query string")
+        };
+    }
 
     double apiVersion = 1.6;
     JArray skus = null; 
