@@ -14,12 +14,12 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
         .ToDictionary(p => p.Key, p => p.Value, StringComparer.OrdinalIgnoreCase);
 
     HttpResponseMessage res = null;
-    string user;
-    if (queryParams.TryGetValue("user", out user))
+    string name;
+    if (queryParams.TryGetValue("name", out name))
     {
         res = new HttpResponseMessage(HttpStatusCode.OK)
         {
-            Content = new StringContent("Hello " + user)
+            Content = new StringContent("Hello " + name)
         };
     }
     else
@@ -66,7 +66,7 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
 
     Console.WriteLine(addSkuId);
     Console.WriteLine(removeSkuId);
-    LicensingHelper.SetO365LicensingInfo(apiVersion, bearerToken, user, addSkuId, removeSkuId);
+    LicensingHelper.SetO365LicensingInfo(apiVersion, bearerToken, name, addSkuId, removeSkuId);
 
 
 return user == null
