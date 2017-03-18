@@ -70,7 +70,7 @@ public static Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceWriter 
 
     JObject jObject = JObject.Parse(responseContent);
 
-    log.Info((string)jObject["value"]);
+    //log.Info((JArray)jObject["value"]);
 
     skus = (JArray)jObject["value"];
 
