@@ -9,7 +9,9 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
     log.Info($"C# HTTP trigger function processed a request. RequestUri={req.RequestUri}");
 
     // parse query parameter
-    string user = req.user;
+    string user = req.GetQueryNameValuePairs()
+        .FirstOrDefault(q => string.Compare(q.Key, "user", true) == 0)
+        .Value;
 
     // Get request body
     dynamic data = await req.Content.ReadAsAsync<object>();
