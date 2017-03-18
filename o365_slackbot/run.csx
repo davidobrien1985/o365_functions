@@ -43,16 +43,14 @@ public static Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceWriter 
 
     string token = AuthenticationHelperRest.AcquireTokenBySpn(tenantId, clientId, clientSecret);
     string bearerToken = "Bearer " + token;
-
-    log.Info(bearerToken);
-
+    
     log.Info("Getting License SKUs...");
 
     var uri = $"https://graph.windows.net/myorganization/subscribedSkus?api-version={apiVersion}";
 
     WebRequest request = WebRequest.Create(uri);
     request.Method = "GET";
-    request.Headers.Add("Authorization", apiToken);
+    request.Headers.Add("Authorization", bearerToken);
 
     string responseContent = null;
 
