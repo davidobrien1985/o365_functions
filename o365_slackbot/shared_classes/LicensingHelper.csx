@@ -27,7 +27,11 @@ public class LicensingHelper
             }
         }
 
+        Console.Write(responseContent);
+
         JObject jObject = JObject.Parse(responseContent);
+
+        Console.Write(jObject["value"]);
         return (JArray)jObject["value"];
     }
 

@@ -13,8 +13,6 @@ public static Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceWriter 
     var queryParams = req.GetQueryNameValuePairs()
         .ToDictionary(p => p.Key, p => p.Value, StringComparer.OrdinalIgnoreCase);
 
-    log.Info($"{queryParams}");
-
     HttpResponseMessage res = null;
     string name;
     if (queryParams.TryGetValue("name", out name))
@@ -68,10 +66,7 @@ public static Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceWriter 
         }
     }
 
-    Console.WriteLine(addSkuId);
-    Console.WriteLine(removeSkuId);
     LicensingHelper.SetO365LicensingInfo(apiVersion, bearerToken, name, addSkuId, removeSkuId);
-
 
     return Task.FromResult(res);
 }
