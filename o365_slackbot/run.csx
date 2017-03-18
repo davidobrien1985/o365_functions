@@ -13,6 +13,8 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
     var queryParams = req.GetQueryNameValuePairs()
         .ToDictionary(p => p.Key, p => p.Value, StringComparer.OrdinalIgnoreCase);
 
+    log.Info($"{queryParams}");
+
     HttpResponseMessage res = null;
     string name;
     if (queryParams.TryGetValue("name", out name))
@@ -69,7 +71,7 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
     LicensingHelper.SetO365LicensingInfo(apiVersion, bearerToken, name, addSkuId, removeSkuId);
 
 
-return user == null
+return name == null
     ? req.CreateResponse(HttpStatusCode.BadRequest, "Please pass a name on the query string or in the request body")
     : req.CreateResponse(HttpStatusCode.OK, skus);
 }
