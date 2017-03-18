@@ -44,6 +44,9 @@ public static Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceWriter 
     string token = AuthenticationHelperRest.AcquireTokenBySpn(tenantId, clientId, clientSecret);
     string bearerToken = "Bearer " + token;
 
+    log.Info(bearerToken);
+
+    log.Info("Getting License SKUs...");
     skus = LicensingHelper.GetO365Skus(apiVersion, bearerToken);
 
     for (int i = 0; i < skus.Count; i++)
@@ -65,6 +68,7 @@ public static Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceWriter 
             removeSkuId = skuId;
         }
     }
+    log.Info("Setting License...");
 
     LicensingHelper.SetO365LicensingInfo(apiVersion, bearerToken, name, addSkuId, removeSkuId);
 
