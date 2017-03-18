@@ -47,7 +47,7 @@ public static Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceWriter 
     log.Info(bearerToken);
 
     log.Info("Getting License SKUs...");
-    skus = LicensingHelper.GetO365Skus(apiVersion, bearerToken);
+    skus = GetO365Skus(apiVersion, bearerToken);
 
     for (int i = 0; i < skus.Count; i++)
     {
@@ -73,6 +73,38 @@ public static Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceWriter 
     LicensingHelper.SetO365LicensingInfo(apiVersion, bearerToken, name, addSkuId, removeSkuId);
 
     return Task.FromResult(res);
+}
+
+
+public static JArray GetO365Skus(double apiVersion, string apiToken)
+{
+    var uri = $"https://graph.windows.net/myorganization/subscribedSkus?api-version={apiVersion}";
+
+    WebRequest request = WebRequest.Create(uri);
+    request.Method = "GET";
+    request.Headers.Add("Authorization", apiToken);
+
+    string responseContent = null;
+
+    using (WebResponse response = request.GetResponse())
+    {
+        using (Stream stream = response.GetResponseStream())
+        {
+            if (stream != null)
+                using (StreamReader sr99 = new StreamReader(stream))
+                {
+                    responseContent = sr99.ReadToEnd();
+                }
+        }
+    }
+    log.Info("here comes the responseContent...");
+    log.Info(responseContent);
+
+    JObject jObject = JObject.Parse(responseContent);
+
+    log.Info((string)jObject["value"]);
+
+    return (JArray)jObject["value"];
 }
 
 public static string GetEnvironmentVariable(string name)
