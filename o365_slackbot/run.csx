@@ -47,37 +47,7 @@ public static Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceWriter 
     log.Info(bearerToken);
 
     log.Info("Getting License SKUs...");
-    skus = GetO365Skus(apiVersion, bearerToken);
 
-    for (int i = 0; i < skus.Count; i++)
-    {
-
-        JObject skuObject = (JObject)skus[i];
-
-        skuId = (string)skuObject["skuId"];
-
-        if ((string)skuObject["skuPartNumber"] == "ENTERPRISEPACK")
-        {
-            if ((int)skuObject["consumedUnits"] <= (int)skuObject["prepaidUnits.enabled"])
-            {
-                addSkuId = skuId;
-            }
-        }
-        if ((string)skuObject["skuPartNumber"] == "STANDARDPACK")
-        {
-            removeSkuId = skuId;
-        }
-    }
-    log.Info("Setting License...");
-
-    LicensingHelper.SetO365LicensingInfo(apiVersion, bearerToken, name, addSkuId, removeSkuId);
-
-    return Task.FromResult(res);
-}
-
-
-public static JArray GetO365Skus(double apiVersion, string apiToken)
-{
     var uri = $"https://graph.windows.net/myorganization/subscribedSkus?api-version={apiVersion}";
 
     WebRequest request = WebRequest.Create(uri);
@@ -104,7 +74,32 @@ public static JArray GetO365Skus(double apiVersion, string apiToken)
 
     log.Info((string)jObject["value"]);
 
-    return (JArray)jObject["value"];
+    skus = (JArray)jObject["value"];
+
+    for (int i = 0; i < skus.Count; i++)
+    {
+
+        JObject skuObject = (JObject)skus[i];
+
+        skuId = (string)skuObject["skuId"];
+
+        if ((string)skuObject["skuPartNumber"] == "ENTERPRISEPACK")
+        {
+            if ((int)skuObject["consumedUnits"] <= (int)skuObject["prepaidUnits.enabled"])
+            {
+                addSkuId = skuId;
+            }
+        }
+        if ((string)skuObject["skuPartNumber"] == "STANDARDPACK")
+        {
+            removeSkuId = skuId;
+        }
+    }
+    log.Info("Setting License...");
+
+    LicensingHelper.SetO365LicensingInfo(apiVersion, bearerToken, name, addSkuId, removeSkuId);
+
+    return Task.FromResult(res);
 }
 
 public static string GetEnvironmentVariable(string name)
