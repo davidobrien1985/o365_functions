@@ -32,6 +32,8 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
         };
     }
 
+    log.Info(name);
+
     double apiVersion = 1.6;
     JArray skus = null; 
     string skuId = null;
@@ -71,9 +73,7 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
     LicensingHelper.SetO365LicensingInfo(apiVersion, bearerToken, name, addSkuId, removeSkuId);
 
 
-return name == null
-    ? req.CreateResponse(HttpStatusCode.BadRequest, "Please pass a name on the query string or in the request body")
-    : req.CreateResponse(HttpStatusCode.OK, skus);
+    return Task.FromResult(res);
 }
 
 public static string GetEnvironmentVariable(string name)
