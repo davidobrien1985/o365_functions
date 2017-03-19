@@ -86,7 +86,7 @@ public static Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceWriter 
 
             if (usedLicenses <= purchasedLicenses)
             {
-                log.Info("There are {0} available E3 licenses and {1} already used.", purchasedLicenses, usedLicenses);
+                log.Info($"There are {purchasedLicenses} available E3 licenses and {usedLicenses} already used.");
                 e3SkuId = skuId;
             }
             else
@@ -102,7 +102,7 @@ public static Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceWriter 
 
     log.Info("Setting License...");
 
-    LicensingHelper.SetO365LicensingInfo(apiVersion, bearerToken, name, addSkuId, removeSkuId);
+    LicensingHelper.SetO365LicensingInfo(apiVersion, bearerToken, name, e3SkuId, e1SkuId);
 
     return Task.FromResult(res);
 }
