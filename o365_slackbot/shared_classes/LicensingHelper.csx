@@ -29,7 +29,7 @@ public class LicensingHelper
 
         JObject jObject = JObject.Parse(responseContent);
 
-        return (JArray)jObject["value"];
+        return jObject.GetValue("value").Value<JArray>();
     }
 
     public static string SetO365LicensingInfo(double apiVersion, string apiToken, string userEmail, string addSkuId, string removeSkuId)

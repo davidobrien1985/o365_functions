@@ -65,14 +65,11 @@ public static Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceWriter 
                 }
         }
     }
-    log.Info("here comes the responseContent...");
+
     log.Info(responseContent);
-    log.Info("first...");
+
     JObject jObject = JObject.Parse(responseContent);
-    log.Info(jObject.ToString());
-    skus = (JArray)jObject["value"];
-    log.Info("second...");
-    log.Info(skus.ToString());
+    skus = LicensingHelper.GetO365Skus(apiVersion, bearerToken);
 
     for (int i = 0; i < skus.Count; i++)
     {
@@ -81,18 +78,28 @@ public static Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceWriter 
 
         skuId = (string)skuObject["skuId"];
 
+        int usedLicenses = skuObject.GetValue("consumedUnits").Value<int>();
+        int purchasedLicenses = skuObject.SelectToken(@"prepaidUnits.enabled").Value<int>();
+
         if ((string)skuObject["skuPartNumber"] == "ENTERPRISEPACK")
         {
-            if ((int)skuObject["consumedUnits"] <= (int)skuObject["prepaidUnits.enabled"])
+
+            if (usedLicenses <= purchasedLicenses)
             {
-                addSkuId = skuId;
+                log.Info("There are {0} available E3 licenses and {1} already used.", purchasedLicenses, usedLicenses);
+                e3SkuId = skuId;
+            }
+            else
+            {
+                log.Info("No licenses available for E3. Please log on to portal.office.com and buy new licenses.");
             }
         }
         if ((string)skuObject["skuPartNumber"] == "STANDARDPACK")
         {
-            removeSkuId = skuId;
+            e1SkuId = skuId;
         }
     }
+
     log.Info("Setting License...");
 
     LicensingHelper.SetO365LicensingInfo(apiVersion, bearerToken, name, addSkuId, removeSkuId);
