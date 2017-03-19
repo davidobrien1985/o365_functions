@@ -13,7 +13,7 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
     string jsonContent = await req.Content.ReadAsStringAsync();
     log.Info(jsonContent);
     string username = (jsonContent.Split('&')[8]).Split('=')[1];
-
+    log.Info(username);
     if ( username == null)
     {
         return req.CreateResponse(HttpStatusCode.BadRequest, new
