@@ -67,9 +67,9 @@ public static Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceWriter 
     }
     log.Info("here comes the responseContent...");
     log.Info(responseContent);
-
-    JObject jObject = JObject.Parse(responseContent);
     log.Info("first...");
+    JObject jObject = JObject.Parse(responseContent);
+    
     log.Info(jObject["value"]);
 
     log.Info((JArray)jObject["value"]);
