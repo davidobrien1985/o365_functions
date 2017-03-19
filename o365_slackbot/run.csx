@@ -10,28 +10,17 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
 {
     log.Info($"C# HTTP trigger function processed a request. RequestUri={req.RequestUri}");
 
-    string jsonContent = await req.Content.ReadAsStringAsync();
+    string jsonContent = await request.Content.ReadAsStringAsync();
     log.Info(jsonContent);
-    dynamic data = JsonConvert.DeserializeObject(jsonContent);
-    
-    //log.Info(jsonContent);
-    log.Info(data.text);
+    string username = (jsonContent.Split('&')[8]).Split('=')[1];
 
-    //if (data.channel == null || data.username == null || data.text == null || data.icon_url == null)
-    //{
-    //    return req.CreateResponse(HttpStatusCode.BadRequest, new
-    //    {
-    //        error = "Please pass channel/username/text/icon_url properties in the input object"
-    //    });
-    //}
-
-    var payload = new
+    if ( username == null)
     {
-        channel = data.channel,
-        username = data.username,
-        text = data.text,
-        icon_url = data.icon_url,
-    };
+        return req.CreateResponse(HttpStatusCode.BadRequest, new
+        {
+            error = "Please pass username in the input object"
+        });
+    }
 
     double apiVersion = 1.6;
     JArray skus = null; 
@@ -79,20 +68,7 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
     }
 
     log.Info("Setting License...");
-    LicensingHelper.SetO365LicensingInfo(apiVersion, bearerToken, data.text, e3SkuId, e1SkuId);
-
-    var jsonString = JsonConvert.SerializeObject(payload);
-    //using (var client = new HttpClient())
-    //{
-    //    var res = await client.PostAsync(_slackWebhookUrl, new FormUrlEncodedContent(new[]
-    //    {
-    //        new KeyValuePair<string, string>("payload", jsonString)
-    //    }));
-    //    return req.CreateResponse(res.StatusCode, new
-    //    {
-    //        body = $"Send to Slack for following. text : {data.text}",
-    //    });
-    //}
+    LicensingHelper.SetO365LicensingInfo(apiVersion, bearerToken, username, e3SkuId, e1SkuId);
 
     var res = "";
     return res;
