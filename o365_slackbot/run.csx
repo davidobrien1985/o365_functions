@@ -69,9 +69,10 @@ public static Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceWriter 
     log.Info(responseContent);
 
     JObject jObject = JObject.Parse(responseContent);
+    log.Info("first...");
+    log.Info(jObject["value"]);
 
-    //log.Info((JArray)jObject["value"]);
-
+    log.Info((JArray)jObject["value"]);
     skus = (JArray)jObject["value"];
 
     for (int i = 0; i < skus.Count; i++)
