@@ -10,7 +10,7 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
 {
     log.Info($"C# HTTP trigger function processed a request. RequestUri={req.RequestUri}");
 
-    string jsonContent = await request.Content.ReadAsStringAsync();
+    string jsonContent = await req.Content.ReadAsStringAsync();
     log.Info(jsonContent);
     string username = (jsonContent.Split('&')[8]).Split('=')[1];
 
