@@ -6,14 +6,14 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 
-private static string _slackWebhookUrl = ConfigurationManager.AppSettings["SlackIncomingWebhookUrl"];
-
 public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
 {
     log.Info($"C# HTTP trigger function processed a request. RequestUri={req.RequestUri}");
 
     string jsonContent = await req.Content.ReadAsStringAsync();
     dynamic data = JsonConvert.DeserializeObject(jsonContent);
+    
+    log.Info(jsonContent);
 
     if (data.channel == null || data.username == null || data.text == null || data.icon_url == null)
     {
@@ -88,17 +88,17 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
         icon_url = data.icon_url,
     };
     var jsonString = JsonConvert.SerializeObject(payload);
-    using (var client = new HttpClient())
-    {
-        var res = await client.PostAsync(_slackWebhookUrl, new FormUrlEncodedContent(new[]
-        {
-            new KeyValuePair<string, string>("payload", jsonString)
-        }));
-        return req.CreateResponse(res.StatusCode, new
-        {
-            body = $"Send to Slack for following. text : {data.text}",
-        });
-    }
+    //using (var client = new HttpClient())
+    //{
+    //    var res = await client.PostAsync(_slackWebhookUrl, new FormUrlEncodedContent(new[]
+    //    {
+    //        new KeyValuePair<string, string>("payload", jsonString)
+    //    }));
+    //    return req.CreateResponse(res.StatusCode, new
+    //    {
+    //        body = $"Send to Slack for following. text : {data.text}",
+    //    });
+    //}
 }
 
 public static string GetEnvironmentVariable(string name)
