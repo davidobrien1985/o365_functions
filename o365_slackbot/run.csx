@@ -10,18 +10,19 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
 {
     log.Info($"C# HTTP trigger function processed a request. RequestUri={req.RequestUri}");
 
-    string formDataStr = await req.Content.ReadAsStringAsync();
-    string[] array = formDataStr.Split("&amp;amp;amp;");
+    string jsonContent = await req.Content.ReadAsStringAsync();
+    dynamic data = JsonConvert.DeserializeObject(jsonContent);
+    
+    //log.Info(jsonContent);
+    log.Info(data.text);
 
-    log.Info(array);
-
-    if (data.channel == null || data.username == null || data.text == null || data.icon_url == null)
-    {
-        return req.CreateResponse(HttpStatusCode.BadRequest, new
-        {
-            error = "Please pass channel/username/text/icon_url properties in the input object"
-        });
-    }
+    //if (data.channel == null || data.username == null || data.text == null || data.icon_url == null)
+    //{
+    //    return req.CreateResponse(HttpStatusCode.BadRequest, new
+    //    {
+    //        error = "Please pass channel/username/text/icon_url properties in the input object"
+    //    });
+    //}
 
     var payload = new
     {
@@ -77,8 +78,7 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
     }
 
     log.Info("Setting License...");
-    // fix jsoncontent for actual email address !!!!!!!!!!!!!!!!!!!!!!!!!!!
-    LicensingHelper.SetO365LicensingInfo(apiVersion, bearerToken, jsonContent, e3SkuId, e1SkuId);
+    LicensingHelper.SetO365LicensingInfo(apiVersion, bearerToken, data.text, e3SkuId, e1SkuId);
 
     var jsonString = JsonConvert.SerializeObject(payload);
     //using (var client = new HttpClient())
