@@ -11,6 +11,7 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
     log.Info($"C# HTTP trigger function processed a request. RequestUri={req.RequestUri}");
 
     string jsonContent = await req.Content.ReadAsStringAsync();
+    log.Info(jsonContent);
     dynamic data = JsonConvert.DeserializeObject(jsonContent);
     
     //log.Info(jsonContent);
