@@ -9,28 +9,25 @@ using Newtonsoft.Json.Linq;
 public static Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceWriter log)
 {
     log.Info($"C# HTTP trigger function processed a request. RequestUri={req.RequestUri}");
-    log.Info(req);
-    var queryParams = req.GetQueryNameValuePairs()
-        .ToDictionary(p => p.Key, p => p.Value, StringComparer.OrdinalIgnoreCase);
 
-    HttpResponseMessage res = null;
-    string name;
-    if (queryParams.TryGetValue("name", out name))
+    string jsonContent = await req.Content.ReadAsStringAsync();
+    dynamic data = JsonConvert.DeserializeObject(jsonContent);
+
+    if (data.channel == null || data.username == null || data.text == null || data.icon_url == null)
     {
-        res = new HttpResponseMessage(HttpStatusCode.OK)
+        return req.CreateResponse(HttpStatusCode.BadRequest, new
         {
-            Content = new StringContent("Hello " + name)
-        };
-    }
-    else
-    {
-        res = new HttpResponseMessage(HttpStatusCode.BadRequest)
-        {
-            Content = new StringContent("Please pass a name on the query string")
-        };
+            error = "Please pass channel/username/text/icon_url properties in the input object"
+        });
     }
 
-    log.Info(name);
+    var payload = new
+    {
+        channel = data.channel,
+        username = data.username,
+        text = data.text,
+        icon_url = data.icon_url,
+    };
 
     double apiVersion = 1.6;
     JArray skus = null; 
@@ -46,29 +43,6 @@ public static Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceWriter 
     
     log.Info("Getting License SKUs...");
 
-    var uri = $"https://graph.windows.net/myorganization/subscribedSkus?api-version={apiVersion}";
-
-    WebRequest request = WebRequest.Create(uri);
-    request.Method = "GET";
-    request.Headers.Add("Authorization", bearerToken);
-
-    string responseContent = null;
-
-    using (WebResponse response = request.GetResponse())
-    {
-        using (Stream stream = response.GetResponseStream())
-        {
-            if (stream != null)
-                using (StreamReader sr99 = new StreamReader(stream))
-                {
-                    responseContent = sr99.ReadToEnd();
-                }
-        }
-    }
-
-    log.Info(responseContent);
-
-    JObject jObject = JObject.Parse(responseContent);
     skus = LicensingHelper.GetO365Skus(apiVersion, bearerToken);
 
     for (int i = 0; i < skus.Count; i++)
