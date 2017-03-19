@@ -35,8 +35,8 @@ public static Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceWriter 
     double apiVersion = 1.6;
     JArray skus = null; 
     string skuId = null;
-    string addSkuId = null;
-    string removeSkuId = null;
+    string e3SkuId = null;
+    string e1SkuId = null;
     string clientId = GetEnvironmentVariable("clientId");
     string clientSecret = GetEnvironmentVariable("clientSecret");
     string tenantId = GetEnvironmentVariable("tenantId");
