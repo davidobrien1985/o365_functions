@@ -72,7 +72,7 @@ public static Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceWriter 
     
     skus = (JArray)jObject["value"];
 
-    log.Info(skus);
+    log.Info((string)skus);
 
     for (int i = 0; i < skus.Count; i++)
     {
