@@ -10,10 +10,10 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
 {
     log.Info($"C# HTTP trigger function processed a request. RequestUri={req.RequestUri}");
 
-    string jsonContent = await req.Content.ReadAsStringAsync();
-    dynamic data = JsonConvert.DeserializeObject(jsonContent);
-    
-    log.Info(jsonContent);
+    string formDataStr = await req.Content.ReadAsStringAsync();
+    string[] array = formDataStr.Split("&amp;amp;amp;");
+
+    log.Info(array);
 
     if (data.channel == null || data.username == null || data.text == null || data.icon_url == null)
     {
