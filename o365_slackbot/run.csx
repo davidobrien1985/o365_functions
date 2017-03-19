@@ -92,6 +92,9 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
     //        body = $"Send to Slack for following. text : {data.text}",
     //    });
     //}
+
+    var res;
+    return res;
 }
 
 public static string GetEnvironmentVariable(string name)
