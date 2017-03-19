@@ -9,7 +9,7 @@ using Newtonsoft.Json.Linq;
 public static Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceWriter log)
 {
     log.Info($"C# HTTP trigger function processed a request. RequestUri={req.RequestUri}");
-
+    log.Info(req);
     var queryParams = req.GetQueryNameValuePairs()
         .ToDictionary(p => p.Key, p => p.Value, StringComparer.OrdinalIgnoreCase);
 
