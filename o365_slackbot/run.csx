@@ -77,16 +77,9 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
     }
 
     log.Info("Setting License...");
+    // fix jsoncontent for actual email address !!!!!!!!!!!!!!!!!!!!!!!!!!!
+    LicensingHelper.SetO365LicensingInfo(apiVersion, bearerToken, jsonContent, e3SkuId, e1SkuId);
 
-    LicensingHelper.SetO365LicensingInfo(apiVersion, bearerToken, name, e3SkuId, e1SkuId);
-
-    var payload = new
-    {
-        channel = data.channel,
-        username = data.username,
-        text = data.text,
-        icon_url = data.icon_url,
-    };
     var jsonString = JsonConvert.SerializeObject(payload);
     //using (var client = new HttpClient())
     //{
