@@ -6,7 +6,9 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 
-public static Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceWriter log)
+private static string _slackWebhookUrl = ConfigurationManager.AppSettings["SlackIncomingWebhookUrl"];
+
+public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
 {
     log.Info($"C# HTTP trigger function processed a request. RequestUri={req.RequestUri}");
 
@@ -78,7 +80,25 @@ public static Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceWriter 
 
     LicensingHelper.SetO365LicensingInfo(apiVersion, bearerToken, name, e3SkuId, e1SkuId);
 
-    return Task.FromResult(res);
+    var payload = new
+    {
+        channel = data.channel,
+        username = data.username,
+        text = data.text,
+        icon_url = data.icon_url,
+    };
+    var jsonString = JsonConvert.SerializeObject(payload);
+    using (var client = new HttpClient())
+    {
+        var res = await client.PostAsync(_slackWebhookUrl, new FormUrlEncodedContent(new[]
+        {
+            new KeyValuePair<string, string>("payload", jsonString)
+        }));
+        return req.CreateResponse(res.StatusCode, new
+        {
+            body = $"Send to Slack for following. text : {data.text}",
+        });
+    }
 }
 
 public static string GetEnvironmentVariable(string name)
