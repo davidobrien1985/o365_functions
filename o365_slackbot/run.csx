@@ -93,7 +93,7 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
     //    });
     //}
 
-    var res;
+    var res = "";
     return res;
 }
 
