@@ -68,7 +68,8 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
     }
 
     log.Info("Setting License...");
-    string res = LicensingHelper.SetO365LicensingInfo(apiVersion, bearerToken, username, e3SkuId, e1SkuId);
+    string returnedUserName = LicensingHelper.SetO365LicensingInfo(apiVersion, bearerToken, username, e3SkuId, e1SkuId);
+    string res = $"Successfully assigned license to {returnedUserName}";
 
     return res;
 }

@@ -46,6 +46,10 @@ public class LicensingHelper
             client.Headers[HttpRequestHeader.Authorization] = apiToken;
             result = client.UploadString(uri, "POST", jsonPayload);
         }
-        return result;
+
+        JObject resultJson = JObject.Parse(result);
+        string username = resultJson.GetValue("userPrincipalName").Value<string>();
+
+        return username;
     }
 }
