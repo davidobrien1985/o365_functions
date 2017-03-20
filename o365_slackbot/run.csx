@@ -30,6 +30,8 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
     string clientId = GetEnvironmentVariable("clientId");
     string clientSecret = GetEnvironmentVariable("clientSecret");
     string tenantId = GetEnvironmentVariable("tenantId");
+    string res = null;
+    JObject e3SkuObject = new JObject();
 
     string token = AuthenticationHelperRest.AcquireTokenBySpn(tenantId, clientId, clientSecret);
     string bearerToken = "Bearer " + token;
