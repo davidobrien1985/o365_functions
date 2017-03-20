@@ -1,1 +1,0 @@
-﻿// blank file to work around a portal bug. See https://github.com/projectkudu/kudu/issues/2334
