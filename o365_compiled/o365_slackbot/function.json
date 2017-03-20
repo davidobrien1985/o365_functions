@@ -1,0 +1,18 @@
+﻿{
+  "disabled": false,
+  "scriptFile": "..\\bin\\o365_compiled.dll",
+  "entryPoint": "o365_compiled.o365_slackbot.run.Run",
+  "bindings": [
+    {
+      "authLevel": "function",
+      "name": "req",
+      "type": "httpTrigger",
+      "direction": "in"
+    },
+    {
+      "name": "res",
+      "type": "http",
+      "direction": "out"
+    }
+  ]
+}

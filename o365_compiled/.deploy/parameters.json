@@ -1,0 +1,18 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "value": "versent"
+        },
+        "storageName": {
+            "value": "functione302c7bdb7af"
+        },
+        "location": {
+            "value": "Australia Southeast"
+        },
+        "subscriptionId": {
+            "value": "31d39423-6438-4cd9-a203-052634635dd2"
+        }
+    }
+}
