@@ -37,11 +37,7 @@ public class LicensingHelper
 
         var uri = $"https://graph.windows.net/myorganization/users/{userEmail}/assignLicense?api-version={apiVersion}";
 
-        // 6fd2c87f-b296-42f0-b197-1e91e994b900
-        // 18181a46-0d4e-45cd-891e-60aabd171b4e
-
         var jsonPayload = $"{{\"addLicenses\": [{{\"disabledPlans\": [],\"skuId\": \"{addSkuId}\"}}],\"removeLicenses\": [\"{removeSkuId}\"]}}";
-
 
         string result = "";
         using (var client = new WebClient())
@@ -50,8 +46,6 @@ public class LicensingHelper
             client.Headers[HttpRequestHeader.Authorization] = apiToken;
             result = client.UploadString(uri, "POST", jsonPayload);
         }
-        Console.WriteLine(result);
-
         return result;
     }
 }
