@@ -14,6 +14,7 @@ Publish
 project.lock.json
 
 /packages
+../packages
 /TestResults
 
 /tools/NuGet.exe
