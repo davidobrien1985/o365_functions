@@ -40,26 +40,13 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
 
     for (int i = 0; i < skus.Count; i++)
     {
-
         JObject skuObject = (JObject)skus[i];
-
         skuId = (string)skuObject["skuId"];
-
-        int usedLicenses = skuObject.GetValue("consumedUnits").Value<int>();
-        int purchasedLicenses = skuObject.SelectToken(@"prepaidUnits.enabled").Value<int>();
 
         if ((string)skuObject["skuPartNumber"] == "ENTERPRISEPACK")
         {
-
-            if (usedLicenses <= purchasedLicenses)
-            {
-                log.Info($"There are {purchasedLicenses} available E3 licenses and {usedLicenses} already used.");
-                e3SkuId = skuId;
-            }
-            else
-            {
-                log.Info("No licenses available for E3. Please log on to portal.office.com and buy new licenses.");
-            }
+           JObject e3SkuObject = (JObject)skus[i];
+           e3SkuId = skuId;
         }
         if ((string)skuObject["skuPartNumber"] == "STANDARDPACK")
         {
@@ -67,10 +54,23 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
         }
     }
 
-    log.Info("Setting License...");
-    string returnedUserName = LicensingHelper.SetO365LicensingInfo(apiVersion, bearerToken, username, e3SkuId, e1SkuId);
-    string res = $"Successfully assigned license to {returnedUserName}";
+    int usedLicenses = e3SkuObject.GetValue("consumedUnits").Value<int>();
+    int purchasedLicenses = e3SkuObject.SelectToken(@"prepaidUnits.enabled").Value<int>();
+    log.Info($"There are {purchasedLicenses} available E3 licenses and {usedLicenses} already used.");
 
+    if (usedLicenses <= purchasedLicenses)
+    {
+        log.Info("Setting License...");
+        string returnedUserName = LicensingHelper.SetO365LicensingInfo(apiVersion, bearerToken, username, e3SkuId, e1SkuId);
+        string res = $"There are { purchasedLicenses} available E3 licenses and { usedLicenses} already used. You have just used one more." +
+            $"Successfully assigned license to {returnedUserName}";
+    }
+    else
+    {
+        log.Info("No licenses available for E3. Please log on to portal.office.com and buy new licenses.");
+        string res = "No licenses available for E3. Please log on to portal.office.com and buy new licenses.";
+    }
+    
     return res;
 }
 
