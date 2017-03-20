@@ -47,7 +47,7 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
 
         if ((string)skuObject["skuPartNumber"] == "ENTERPRISEPACK")
         {
-           JObject e3SkuObject = (JObject)skus[i];
+           e3SkuObject = (JObject)skus[i];
            e3SkuId = skuId;
         }
         if ((string)skuObject["skuPartNumber"] == "STANDARDPACK")
@@ -64,13 +64,13 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
     {
         log.Info("Setting License...");
         string returnedUserName = LicensingHelper.SetO365LicensingInfo(apiVersion, bearerToken, username, e3SkuId, e1SkuId);
-        string res = $"There are { purchasedLicenses} available E3 licenses and { usedLicenses} already used. You have just used one more." +
+        res = $"There are { purchasedLicenses} available E3 licenses and { usedLicenses} already used. You have just used one more." +
             $"Successfully assigned license to {returnedUserName}";
     }
     else
     {
         log.Info("No licenses available for E3. Please log on to portal.office.com and buy new licenses.");
-        string res = "No licenses available for E3. Please log on to portal.office.com and buy new licenses.";
+        res = "No licenses available for E3. Please log on to portal.office.com and buy new licenses.";
     }
     
     return res;
