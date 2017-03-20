@@ -58,7 +58,6 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
 
     int usedLicenses = e3SkuObject.GetValue("consumedUnits").Value<int>();
     int purchasedLicenses = e3SkuObject.SelectToken(@"prepaidUnits.enabled").Value<int>();
-    log.Info($"There are {purchasedLicenses} available E3 licenses and {usedLicenses} already used.");
 
     if (usedLicenses < purchasedLicenses)
     {
