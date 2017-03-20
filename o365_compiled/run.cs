@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs.Host;
 using Newtonsoft.Json.Linq;
-using o365_compiled.o365_slackbot.shared_classes;
+using o365_compiled.shared_classes;
 
-namespace o365_compiled.o365_slackbot
+namespace o365_compiled
 {
     public class run
     {

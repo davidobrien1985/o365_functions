@@ -105,12 +105,11 @@
     <Content Include="LICENSE" />
     <Content Include="README.md" />
     <Content Include="o365_slackbot\function.json" />
-    <Content Include="o365_slackbot\project.json" />
-    <Content Include="o365_slackbot\project.lock.json" />
     <Content Include="o365_slackbot\readme.md" />
-    <Compile Include="o365_slackbot\run.cs" />
-    <Compile Include="o365_slackbot\shared_classes\AuthenticationHelperRest.cs" />
-    <Compile Include="o365_slackbot\shared_classes\LicensingHelper.cs" />
+    <Compile Include="run.cs" />
+    <Compile Include="shared_classes\AuthenticationHelperRest.cs" />
+    <Compile Include="shared_classes\LicensingHelper.cs" />
+    <Content Include="o365_slackbot\run.csx" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -1,7 +1,7 @@
 ﻿{
   "disabled": false,
   "scriptFile": "..\\bin\\o365_compiled.dll",
-  "entryPoint": "o365_compiled.o365_slackbot.run.Run",
+  "entryPoint": "o365_compiled.run.Run",
   "bindings": [
     {
       "authLevel": "function",

@@ -4,7 +4,7 @@ using System.Net;
 using System.Text;
 using Newtonsoft.Json.Linq;
 
-namespace o365_compiled.o365_slackbot.shared_classes
+namespace o365_compiled.shared_classes
 {
     public class AuthenticationHelperRest
     {
