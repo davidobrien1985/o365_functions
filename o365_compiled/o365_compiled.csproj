@@ -99,7 +99,6 @@
   <ItemGroup>
     <Content Include="packages.config" />
     <Content Include=".gitignore" />
-    <Content Include=".secrets" />
     <Content Include="appsettings.json" />
     <Content Include="host.json" />
     <Content Include="LICENSE" />
