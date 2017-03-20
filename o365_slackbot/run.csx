@@ -60,7 +60,7 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
     int purchasedLicenses = e3SkuObject.SelectToken(@"prepaidUnits.enabled").Value<int>();
     log.Info($"There are {purchasedLicenses} available E3 licenses and {usedLicenses} already used.");
 
-    if (usedLicenses <= purchasedLicenses)
+    if (usedLicenses < purchasedLicenses)
     {
         log.Info("Setting License...");
         string returnedUserName = LicensingHelper.SetO365LicensingInfo(apiVersion, bearerToken, username, e3SkuId, e1SkuId);
@@ -69,8 +69,8 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
     }
     else
     {
-        log.Info("No licenses available for E3. Please log on to portal.office.com and buy new licenses.");
-        res = "No licenses available for E3. Please log on to portal.office.com and buy new licenses.";
+        log.Info($"There are { purchasedLicenses} available E3 licenses and { usedLicenses} already used. No licenses available for E3. Please log on to portal.office.com and buy new licenses.");
+        res = $"There are { purchasedLicenses} available E3 licenses and { usedLicenses} already used. No licenses available for E3. Please log on to portal.office.com and buy new licenses.";
     }
     
     return res;
