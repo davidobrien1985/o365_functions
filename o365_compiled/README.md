@@ -1,5 +1,8 @@
 # o365_slackbot
 
+>NOTE: `master` branch is leveraging "compiled" web jobs function which is currently "under development" (yeah, I know, in master branch).
+> `dev` branch uses `csx` files.
+
 This function is written in C# and leverages Azure Functions to execute REST calls against the Microsoft Graph API.
 
 ## How it works
