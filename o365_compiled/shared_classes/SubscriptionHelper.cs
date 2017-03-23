@@ -8,7 +8,7 @@ namespace o365_compiled.shared_classes
 {
     public class SubscriptionHelper
     {
-        public static JObject GetSkuId (JArray skus, string skuPartNumber)
+        public static JObject FilterSkus (JArray skus, string skuPartNumber)
         {
             foreach (JToken sku in skus)
             {

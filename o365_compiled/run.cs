@@ -44,8 +44,8 @@ namespace o365_compiled
                 log.Info("Getting License SKUs...");
                 // get information about all the O365 SKUs available
                 skus = LicensingHelper.GetO365Skus(graphApiVersion, bearerToken);
-                e1SkuObject = SubscriptionHelper.GetSkuId(skus, "STANDARDPACK");
-                e3SkuObject = SubscriptionHelper.GetSkuId(skus, "ENTERPRISEPACK");
+                e1SkuObject = SubscriptionHelper.FilterSkus(skus, "STANDARDPACK");
+                e3SkuObject = SubscriptionHelper.FilterSkus(skus, "ENTERPRISEPACK");
 
                 e1SkuId = (string) e1SkuObject["skuId"];
                 e3SkuId = (string) e3SkuObject["skuId"];
