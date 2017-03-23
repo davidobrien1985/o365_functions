@@ -92,7 +92,7 @@ namespace o365_compiled
         public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
         {
 
-            log.Info("C# HTTP trigger function processed a request.");
+            log.Info($"C# HTTP trigger function processed a request.RequestURI= {req.RequestUri}");
             double graphApiVersion = double.Parse(GetEnvironmentVariable("graphApiVersion"));
             string clientId = GetEnvironmentVariable("clientId");
             string clientSecret = GetEnvironmentVariable("clientSecret");

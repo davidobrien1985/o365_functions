@@ -97,7 +97,6 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="deallocatelicense\run.cs" />
     <Compile Include="shared_classes\SubscriptionHelper.cs" />
     <Content Include="packages.config" />
     <Content Include=".gitignore" />
