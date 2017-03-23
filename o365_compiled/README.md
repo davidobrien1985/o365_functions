@@ -15,25 +15,29 @@ The function will then check your current E3 license status and depending on the
 ## Configuration / Dependencies
 
 This code expects to be triggered by a [Slack Slash command](https://api.slack.com/slash-commands). 
-In your Azure Functions App Settings you will need to have added the following three variables:
+In your Azure Functions App Settings you will need to have added the following five variables:
 
 ```
    string clientId = GetEnvironmentVariable("clientId");
    string clientSecret = GetEnvironmentVariable("clientSecret");
    string tenantId = GetEnvironmentVariable("tenantId");
+   double graphApiVersion = double.Parse(GetEnvironmentVariable("graphApiVersion"));
+   string allowedChannelName = GetEnvironmentVariable("allowedChannelName");
 ```
 Check the documentation to learn how to get these values for your custom "application": (https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-integrating-applications)
+
+`allowedChannelName` is the Slack channel that is allowed to execute this function.
+`graphApiVersion` is currently (23/03/2017) at 1.6
 
 ## Known issues
 
 - this function suffers from cold-start issues
-	Slack expects a response back in less than 3,000ms, which a cold-start won't be able to achieve
-	see TODO, will convert to compiled library
+	- these should've gotten better now, but occasionally still occur
 
 ## TODO
 
 - query different license SKUs
-- convert to compiled library
+- convert to compiled library (DONE! on `master` branch)
 - support assignment of other SKUs
 - support disabling of certain plans
 - add way more error handling
