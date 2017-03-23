@@ -36,22 +36,14 @@ namespace o365_compiled
             log.Info("Getting License SKUs...");
 
             skus = LicensingHelper.GetO365Skus(graphApiVersion, bearerToken);
+            e1SkuId = SubscriptionHelper.GetSkuId(skus, "STANDARDPACK");
+            e3SkuId = SubscriptionHelper.GetSkuId(skus, "ENTERPRISEPACK");
 
-            for (int i = 0; i < skus.Count; i++)
+            if ((e1SkuId  == "00000000000000000000000000") || (e3SkuId == "00000000000000000000000000"))
             {
-                JObject skuObject = (JObject) skus[i];
-                skuId = (string) skuObject["skuId"];
-
-                if ((string) skuObject["skuPartNumber"] == "ENTERPRISEPACK")
-                {
-                    e3SkuObject = (JObject) skus[i];
-                    e3SkuId = skuId;
-                }
-                if ((string) skuObject["skuPartNumber"] == "STANDARDPACK")
-                {
-                    e1SkuId = skuId;
-                }
+                throw new SystemException("Unable to find skuIDs");
             }
+
 
             int usedLicenses = e3SkuObject.GetValue("consumedUnits").Value<int>();
             int purchasedLicenses = e3SkuObject.SelectToken(@"prepaidUnits.enabled").Value<int>();
