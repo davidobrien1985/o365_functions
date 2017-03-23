@@ -1,0 +1,18 @@
+{
+  "disabled": false,
+  "scriptFile": "..\\bin\\deallocatelicense.dll",
+  "entryPoint": "deallocatelicense.deallocatelicense.run.Run",
+  "bindings": [
+    {
+      "authLevel": "function",
+      "name": "req",
+      "type": "httpTrigger",
+      "direction": "in"
+    },
+    {
+      "name": "$return",
+      "type": "http",
+      "direction": "out"
+    }
+  ]
+}
