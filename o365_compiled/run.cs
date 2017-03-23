@@ -129,8 +129,8 @@ namespace o365_compiled
                 e1SkuId = (string)e1SkuObject["skuId"];
                 e3SkuId = (string)e3SkuObject["skuId"];
 
-                int usedLicenses = e3SkuObject.GetValue("consumedUnits").Value<int>();
-                int purchasedLicenses = e3SkuObject.SelectToken(@"prepaidUnits.enabled").Value<int>();
+                int usedLicenses = e1SkuObject.GetValue("consumedUnits").Value<int>();
+                int purchasedLicenses = e1SkuObject.SelectToken(@"prepaidUnits.enabled").Value<int>();
 
                 // check if enough licenses available
                 if (usedLicenses < purchasedLicenses)
