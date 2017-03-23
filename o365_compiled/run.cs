@@ -38,7 +38,8 @@ namespace o365_compiled
             skus = LicensingHelper.GetO365Skus(graphApiVersion, bearerToken);
             e1SkuId = SubscriptionHelper.GetSkuId(skus, "STANDARDPACK");
             e3SkuId = SubscriptionHelper.GetSkuId(skus, "ENTERPRISEPACK");
-
+            log.Info(e1SkuId);
+            log.Info(e3SkuId);
             if ((e1SkuId  == "00000000000000000000000000") || (e3SkuId == "00000000000000000000000000"))
             {
                 res = "Unable to find the SkuIds for E1 or E3.";
