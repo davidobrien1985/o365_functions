@@ -19,7 +19,7 @@ namespace o365_compiled
             string username = (jsonContent.Split('&')[8]).Split('=')[1];
             log.Info(username);
             
-            double apiVersion = 1.6;
+            double graphApiVersion = double.Parse(GetEnvironmentVariable("graphApiVersion"));
             JArray skus = null;
             string skuId = null;
             string e3SkuId = null;
@@ -35,7 +35,7 @@ namespace o365_compiled
 
             log.Info("Getting License SKUs...");
 
-            skus = LicensingHelper.GetO365Skus(apiVersion, bearerToken);
+            skus = LicensingHelper.GetO365Skus(graphApiVersion, bearerToken);
 
             for (int i = 0; i < skus.Count; i++)
             {
@@ -60,7 +60,7 @@ namespace o365_compiled
             {
                 log.Info("Setting License...");
                 string returnedUserName =
-                    LicensingHelper.SetO365LicensingInfo(apiVersion, bearerToken, username, e3SkuId, e1SkuId);
+                    LicensingHelper.SetO365LicensingInfo(graphApiVersion, bearerToken, username, e3SkuId, e1SkuId);
                 res =
                     $"There are {purchasedLicenses} available E3 licenses and {usedLicenses} already used. You have just used one more." +
                     $"Successfully assigned license to {returnedUserName}";
