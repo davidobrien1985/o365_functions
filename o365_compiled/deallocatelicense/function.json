@@ -1,7 +1,7 @@
 {
   "disabled": false,
-  "scriptFile": "..\\bin\\deallocatelicense.dll",
-  "entryPoint": "deallocatelicense.deallocatelicense.run.Run",
+  "scriptFile": "..\\bin\\o365_compiled.dll",
+  "entryPoint": "o365_compiled.Deallocatelicense.Run",
   "bindings": [
     {
       "authLevel": "function",

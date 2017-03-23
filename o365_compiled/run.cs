@@ -86,4 +86,17 @@ namespace o365_compiled
             return System.Environment.GetEnvironmentVariable(name, EnvironmentVariableTarget.Process);
         }
     }
+
+    public class Deallocatelicense
+    {
+        public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
+        {
+
+            log.Info("C# HTTP trigger function processed a request.");
+
+            string res = null;
+
+            return res;
+        }
+    }
 }

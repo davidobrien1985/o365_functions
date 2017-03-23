@@ -97,6 +97,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="deallocatelicense\run.cs" />
     <Compile Include="shared_classes\SubscriptionHelper.cs" />
     <Content Include="packages.config" />
     <Content Include=".gitignore" />
@@ -109,6 +110,8 @@
     <Compile Include="shared_classes\AuthenticationHelperRest.cs" />
     <Compile Include="shared_classes\LicensingHelper.cs" />
     <Content Include="o365_slackbot\run.csx" />
+    <Content Include="deallocatelicense\function.json" />
+    <Content Include="deallocatelicense\readme.md" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
