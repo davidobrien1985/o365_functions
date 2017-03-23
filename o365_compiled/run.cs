@@ -29,6 +29,7 @@ namespace o365_compiled
             string tenantId = GetEnvironmentVariable("tenantId");
             string res = null;
             JObject e3SkuObject = new JObject();
+            JObject e1SkuObject = new JObject();
 
             string token = AuthenticationHelperRest.AcquireTokenBySpn(tenantId, clientId, clientSecret);
             string bearerToken = "Bearer " + token;
@@ -36,16 +37,11 @@ namespace o365_compiled
             log.Info("Getting License SKUs...");
 
             skus = LicensingHelper.GetO365Skus(graphApiVersion, bearerToken);
-            e1SkuId = SubscriptionHelper.GetSkuId(skus, "STANDARDPACK");
-            e3SkuId = SubscriptionHelper.GetSkuId(skus, "ENTERPRISEPACK");
-            log.Info(e1SkuId);
-            log.Info(e3SkuId);
-            if ((e1SkuId  == "00000000000000000000000000") || (e3SkuId == "00000000000000000000000000"))
-            {
-                res = "Unable to find the SkuIds for E1 or E3.";
-                return res;
-            }
+            e1SkuObject = SubscriptionHelper.GetSkuId(skus, "STANDARDPACK");
+            e3SkuObject = SubscriptionHelper.GetSkuId(skus, "ENTERPRISEPACK");
 
+            e1SkuId = (string) e1SkuObject["skuId"];
+            e3SkuId = (string) e3SkuObject["skuId"];
 
             int usedLicenses = e3SkuObject.GetValue("consumedUnits").Value<int>();
             int purchasedLicenses = e3SkuObject.SelectToken(@"prepaidUnits.enabled").Value<int>();

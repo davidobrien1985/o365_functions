@@ -8,27 +8,21 @@ namespace o365_compiled.shared_classes
 {
     public class SubscriptionHelper
     {
-        public static string GetSkuId (JArray skus, string skuPartNumber)
+        public static JObject GetSkuId (JArray skus, string skuPartNumber)
         {
-            string skuId = null;
-
             foreach (JToken sku in skus)
             {
                 JObject skuObject = (JObject)sku;
-                skuId = (string)skuObject["skuId"];
 
                 if ((string)skuObject["skuPartNumber"] == skuPartNumber)
                 {
                     skuObject = (JObject)sku;
-                    return skuId;
+                    return skuObject;
                 }
             }
-            if (skuId == null)
-            {
-                return "00000000000000000000000000";
-            }
+            
 
-            return "00000000000000000000000000";
+            return new JObject();
         }
     }
 }
