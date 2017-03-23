@@ -41,7 +41,8 @@ namespace o365_compiled
 
             if ((e1SkuId  == "00000000000000000000000000") || (e3SkuId == "00000000000000000000000000"))
             {
-                throw new SystemException("Unable to find skuIDs");
+                res = "Unable to find the SkuIds for E1 or E3.";
+                return res;
             }
 
 
