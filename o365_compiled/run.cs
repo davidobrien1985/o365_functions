@@ -62,7 +62,7 @@ namespace o365_compiled
                         LicensingHelper.SetO365LicensingInfo(graphApiVersion, bearerToken, username, e3SkuId, e1SkuId);
                     res =
                         $"There are {purchasedLicenses} available E3 licenses and {usedLicenses} already used. You have just used one more." +
-                        $"Successfully assigned license to {returnedUserName}";
+                        $"Successfully assigned *E3* license to {returnedUserName}";
                 }
                 else
                 {
@@ -141,7 +141,7 @@ namespace o365_compiled
                         LicensingHelper.SetO365LicensingInfo(graphApiVersion, bearerToken, username, e1SkuId, e3SkuId);
                     res =
                         $"There are {purchasedLicenses} available E1 licenses and {usedLicenses} already used. You have just used one more." +
-                        $"Successfully assigned license to {returnedUserName}";
+                        $"Successfully assigned *E1* license to {returnedUserName}";
                 }
                 else
                 {
