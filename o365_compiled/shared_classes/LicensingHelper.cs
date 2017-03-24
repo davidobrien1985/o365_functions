@@ -81,11 +81,11 @@ namespace o365_compiled.shared_classes
             }
             log.Info(responseContent);
             JObject resultJson = JObject.Parse(responseContent);
-            log.Info((string)resultJson);
-            string userSkuId = resultJson.GetValue(@"assignedLicenses.skuId").Value<string>();
+
+            string userSkuId = resultJson["assignedLicenses"][0]["skuId"].Value<string>();
 
             JArray skus = GetO365Skus(apiVersion, apiToken);
-            JObject skuObject = SubscriptionHelper.FilterSkusByPartNumber(skus, userSkuId);
+            JObject skuObject = SubscriptionHelper.FilterSkusBySkuId(skus, userSkuId);
             
             return (string)skuObject["skuPartNumber"];
         }
