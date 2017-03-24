@@ -79,7 +79,7 @@ namespace o365_compiled.shared_classes
                         }
                 }
             }
-
+            log.Info(responseContent);
             JObject resultJson = JObject.Parse(responseContent);
 
             string userSkuId = resultJson.SelectToken(@"assignedLicenses.skuId").Value<string>();
