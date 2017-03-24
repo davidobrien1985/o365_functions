@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs.Host;
 using Newtonsoft.Json.Linq;
 using o365_compiled.shared_classes;
+using System.Web;
 
 namespace o365_compiled
 {
@@ -175,10 +176,10 @@ namespace o365_compiled
             string res = null;
 
             string jsonContent = await req.Content.ReadAsStringAsync();
-            log.Info(jsonContent);
+
             // assign the Slack payload "text" to be the UPN of the user that needs the license
             string username = (jsonContent.Split('&')[8]).Split('=')[1];
-            log.Info(username);
+            string encUserName = Uri.UnescapeDataString(username);
 
             // assign the Slack payload "channel_name" to the allowed channel name for this code to be called from
             string channelName = (jsonContent.Split('&')[4]).Split('=')[1];
@@ -187,11 +188,10 @@ namespace o365_compiled
                 // acquire Bearer Token for AD Application user through Graph API
                 string token = AuthenticationHelperRest.AcquireTokenBySpn(tenantId, clientId, clientSecret);
                 string bearerToken = "Bearer " + token;
-                log.Info(bearerToken);
                 string skuPartNumber =
-                    LicensingHelper.GetUserLicenseInfo(graphApiVersion, username, bearerToken, log);
+                    LicensingHelper.GetUserLicenseInfo(graphApiVersion, encUserName, bearerToken, log);
 
-                res = $"{username} is licensed with the {skuPartNumber} license.";
+                res = $"{encUserName} is licensed with the {skuPartNumber} license.";
             }
             return res;
 
