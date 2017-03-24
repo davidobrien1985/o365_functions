@@ -53,5 +53,26 @@ namespace o365_compiled.shared_classes
 
             return username;
         }
+
+        public static string GetUserLicenseInfo(double apiVersion, string userEmail, string apiToken)
+        {
+            var uri = $"https://graph.windows.net/myorganization/users/{userEmail}?api-version={apiVersion}";
+
+            string result = "";
+            using (var client = new WebClient())
+            {
+                client.Headers[HttpRequestHeader.ContentType] = "application/json";
+                client.Headers[HttpRequestHeader.Authorization] = apiToken;
+                result = client.UploadString(uri, "GET");
+            }
+
+            JObject resultJson = JObject.Parse(result);
+            string userSkuId = resultJson.SelectToken(@"assignedLicenses.skuId").Value<string>();
+
+            JArray skus = GetO365Skus(apiVersion, apiToken);
+            JObject skuObject = SubscriptionHelper.FilterSkusByPartNumber(skus, userSkuId);
+            
+            return (string)skuObject["skuPartNumber"];
+        }
     }
 }
