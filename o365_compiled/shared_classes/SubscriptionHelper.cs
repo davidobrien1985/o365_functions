@@ -8,7 +8,7 @@ namespace o365_compiled.shared_classes
 {
     public class SubscriptionHelper
     {
-        public static JObject FilterSkus (JArray skus, string skuPartNumber)
+        public static JObject FilterSkusByPartNumber (JArray skus, string skuPartNumber)
         {
             foreach (JToken sku in skus)
             {
@@ -20,8 +20,6 @@ namespace o365_compiled.shared_classes
                     return skuObject;
                 }
             }
-            
-
             return new JObject();
         }
     }
