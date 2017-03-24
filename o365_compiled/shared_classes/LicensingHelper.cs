@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.Azure.WebJobs.Host;
@@ -64,7 +65,7 @@ namespace o365_compiled.shared_classes
             var uri = $"https://graph.windows.net/myorganization/users/{userEmail}?api-version={apiVersion}";
 
             var client = new HttpClient();
-
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(apiToken);
             var response = await client.GetAsync(uri);
             JObject resultJson = new JObject();
             if (response.Content != null)
