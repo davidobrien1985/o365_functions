@@ -1,5 +1,9 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Web;
 using Newtonsoft.Json.Linq;
 
 namespace o365_compiled.shared_classes
@@ -54,19 +58,22 @@ namespace o365_compiled.shared_classes
             return username;
         }
 
-        public static string GetUserLicenseInfo(double apiVersion, string userEmail, string apiToken)
+        public static async Task<string> GetUserLicenseInfo(double apiVersion, string userEmail, string apiToken)
         {
             var uri = $"https://graph.windows.net/myorganization/users/{userEmail}?api-version={apiVersion}";
 
-            string result = "";
-            using (var client = new WebClient())
+            var client = new HttpClient();
+
+            var response = await client.GetAsync(uri);
+            JObject resultJson = new JObject();
+            if (response.Content != null)
             {
-                client.Headers[HttpRequestHeader.ContentType] = "application/json";
-                client.Headers[HttpRequestHeader.Authorization] = apiToken;
-                result = client.UploadString(uri, "GET");
+                var responseString = await response.Content.ReadAsStringAsync();
+                resultJson = JObject.Parse(responseString);
+                Console.WriteLine(responseString);
             }
 
-            JObject resultJson = JObject.Parse(result);
+            
             string userSkuId = resultJson.SelectToken(@"assignedLicenses.skuId").Value<string>();
 
             JArray skus = GetO365Skus(apiVersion, apiToken);
