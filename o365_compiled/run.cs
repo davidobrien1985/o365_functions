@@ -188,7 +188,7 @@ namespace o365_compiled
                 string token = AuthenticationHelperRest.AcquireTokenBySpn(tenantId, clientId, clientSecret);
                 string bearerToken = "Bearer " + token;
                 log.Info(bearerToken);
-                string skuPartNumber = LicensingHelper.GetUserLicenseInfo(graphApiVersion, username, bearerToken);
+                string skuPartNumber = await LicensingHelper.GetUserLicenseInfo(graphApiVersion, username, bearerToken);
 
                 res = $"{username} is licensed with the {skuPartNumber} license.";
             }

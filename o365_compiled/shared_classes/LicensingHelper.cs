@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
+using Microsoft.Azure.WebJobs.Host;
 using Newtonsoft.Json.Linq;
 
 namespace o365_compiled.shared_classes
@@ -58,7 +59,7 @@ namespace o365_compiled.shared_classes
             return username;
         }
 
-        public static async Task<string> GetUserLicenseInfo(double apiVersion, string userEmail, string apiToken)
+        public static async Task<string> GetUserLicenseInfo(double apiVersion, string userEmail, string apiToken, TraceWriter log)
         {
             var uri = $"https://graph.windows.net/myorganization/users/{userEmail}?api-version={apiVersion}";
 
@@ -70,7 +71,7 @@ namespace o365_compiled.shared_classes
             {
                 var responseString = await response.Content.ReadAsStringAsync();
                 resultJson = JObject.Parse(responseString);
-                Console.WriteLine(responseString);
+                log.Info(responseString);
             }
 
             
