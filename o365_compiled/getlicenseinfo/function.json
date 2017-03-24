@@ -1,0 +1,18 @@
+{
+  "disabled": false,
+  "scriptFile": "..\\bin\\o365_compiled.dll",
+  "entryPoint": "o365_compiled.GetLicenseInfo.Run",
+  "bindings": [
+    {
+      "authLevel": "function",
+      "name": "req",
+      "type": "httpTrigger",
+      "direction": "in"
+    },
+    {
+      "name": "$return",
+      "type": "http",
+      "direction": "out"
+    }
+  ]
+}
