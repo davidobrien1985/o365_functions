@@ -189,7 +189,7 @@ namespace o365_compiled
                 string bearerToken = "Bearer " + token;
                 log.Info(bearerToken);
                 string skuPartNumber =
-                    await LicensingHelper.GetUserLicenseInfo(graphApiVersion, username, bearerToken, log);
+                    LicensingHelper.GetUserLicenseInfo(graphApiVersion, username, bearerToken, log);
 
                 res = $"{username} is licensed with the {skuPartNumber} license.";
             }

@@ -60,22 +60,28 @@ namespace o365_compiled.shared_classes
             return username;
         }
 
-        public static async Task<string> GetUserLicenseInfo(double apiVersion, string userEmail, string apiToken, TraceWriter log)
+        public static string GetUserLicenseInfo(double apiVersion, string userEmail, string apiToken, TraceWriter log)
         {
             var uri = $"https://graph.windows.net/myorganization/users/{userEmail}?api-version={apiVersion}";
 
-            var client = new HttpClient();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(apiToken);
-            var response = await client.GetAsync(uri);
-            JObject resultJson = new JObject();
-            if (response.Content != null)
+            WebRequest request = WebRequest.Create(uri);
+            request.Method = "GET";
+            request.Headers.Add("Authorization", apiToken);
+            string responseContent = null;
+            using (WebResponse response = request.GetResponse())
             {
-                var responseString = await response.Content.ReadAsStringAsync();
-                resultJson = JObject.Parse(responseString);
-                log.Info(responseString);
+                using (Stream stream = response.GetResponseStream())
+                {
+                    if (stream != null)
+                        using (StreamReader sr99 = new StreamReader(stream))
+                        {
+                            responseContent = sr99.ReadToEnd();
+                        }
+                }
             }
 
-            
+            JObject resultJson = JObject.Parse(responseContent);
+
             string userSkuId = resultJson.SelectToken(@"assignedLicenses.skuId").Value<string>();
 
             JArray skus = GetO365Skus(apiVersion, apiToken);
