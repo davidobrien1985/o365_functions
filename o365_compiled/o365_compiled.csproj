@@ -112,6 +112,8 @@
     <Content Include="deallocatelicense\function.json" />
     <Content Include="deallocatelicense\readme.md" />
     <Content Include="getlicenseinfo\function.json" />
+    <Content Include="getlicenseinfo\run.csx" />
+    <Content Include="deallocatelicense\run.csx" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
