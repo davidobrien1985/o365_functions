@@ -111,6 +111,7 @@
     <Content Include="o365_slackbot\run.csx" />
     <Content Include="deallocatelicense\function.json" />
     <Content Include="deallocatelicense\readme.md" />
+    <Content Include="getlicenseinfo\function.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
