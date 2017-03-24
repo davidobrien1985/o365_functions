@@ -108,10 +108,8 @@ namespace o365_compiled
             string res = null;
 
             string jsonContent = await req.Content.ReadAsStringAsync();
-            log.Info(jsonContent);
             // assign the Slack payload "text" to be the UPN of the user that needs the license
             string username = (jsonContent.Split('&')[8]).Split('=')[1];
-            log.Info(username);
 
             // assign the Slack payload "channel_name" to the allowed channel name for this code to be called from
             string channelName = (jsonContent.Split('&')[4]).Split('=')[1];
