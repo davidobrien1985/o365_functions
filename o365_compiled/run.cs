@@ -4,21 +4,15 @@ using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs.Host;
 using Newtonsoft.Json.Linq;
 using o365_compiled.shared_classes;
-using System.Web;
 
 namespace o365_compiled
 {
     public class run
     {
-
         public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
         {
             log.Info($"C# HTTP trigger function processed a request. RequestUri={req.RequestUri}");
 
-            JArray skus = null;
-            string skuId = null;
-            string e3SkuId = null;
-            string e1SkuId = null;
             double graphApiVersion = double.Parse(GetEnvironmentVariable("graphApiVersion"));
             string clientId = GetEnvironmentVariable("clientId");
             string clientSecret = GetEnvironmentVariable("clientSecret");
@@ -44,12 +38,12 @@ namespace o365_compiled
 
                 log.Info("Getting License SKUs...");
                 // get information about all the O365 SKUs available
-                skus = LicensingHelper.GetO365Skus(graphApiVersion, bearerToken);
+                JArray skus = LicensingHelper.GetO365Skus(graphApiVersion, bearerToken);
                 e1SkuObject = SubscriptionHelper.FilterSkusByPartNumber(skus, "STANDARDPACK");
                 e3SkuObject = SubscriptionHelper.FilterSkusByPartNumber(skus, "ENTERPRISEPACK");
 
-                e1SkuId = (string) e1SkuObject["skuId"];
-                e3SkuId = (string) e3SkuObject["skuId"];
+                string e1SkuId = (string) e1SkuObject["skuId"];
+                string e3SkuId = (string) e3SkuObject["skuId"];
 
                 int usedLicenses = e3SkuObject.GetValue("consumedUnits").Value<int>();
                 int purchasedLicenses = e3SkuObject.SelectToken(@"prepaidUnits.enabled").Value<int>();
@@ -99,10 +93,6 @@ namespace o365_compiled
             string clientSecret = GetEnvironmentVariable("clientSecret");
             string tenantId = GetEnvironmentVariable("tenantId");
             string allowedChannelName = GetEnvironmentVariable("allowedChannelName");
-            JArray skus = null;
-            string skuId = null;
-            string e3SkuId = null;
-            string e1SkuId = null;
             JObject e3SkuObject = new JObject();
             JObject e1SkuObject = new JObject();
             string res = null;
@@ -121,12 +111,12 @@ namespace o365_compiled
 
                 log.Info("Getting License SKUs...");
                 // get information about all the O365 SKUs available
-                skus = LicensingHelper.GetO365Skus(graphApiVersion, bearerToken);
+                JArray skus = LicensingHelper.GetO365Skus(graphApiVersion, bearerToken);
                 e1SkuObject = SubscriptionHelper.FilterSkusByPartNumber(skus, "STANDARDPACK");
                 e3SkuObject = SubscriptionHelper.FilterSkusByPartNumber(skus, "ENTERPRISEPACK");
 
-                e1SkuId = (string) e1SkuObject["skuId"];
-                e3SkuId = (string) e3SkuObject["skuId"];
+                string e1SkuId = (string) e1SkuObject["skuId"];
+                string e3SkuId = (string) e3SkuObject["skuId"];
 
                 int usedLicenses = e1SkuObject.GetValue("consumedUnits").Value<int>();
                 int purchasedLicenses = e1SkuObject.SelectToken(@"prepaidUnits.enabled").Value<int>();
