@@ -7,11 +7,26 @@ using o365_compiled.shared_classes;
 
 namespace o365_compiled
 {
+    public class payload
+    {
+        public string SlackToken { get; set; }
+        public string SlackTeamId { get; set; }
+        public string SlackTeamDomain { get; set; }
+        public string SlackChannelId { get; set; }
+        public string SlackChannelName { get; set; }
+        public string SlackUserId { get; set; }
+        public string SlackUserName { get; set; }
+        public string SlackCommand { get; set; }
+        public string SlackText { get; set; }
+        public string SlackResponseUrl { get; set; }
+
+    }
+
     public class run
     {
-        public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
+        public static async Task<object> Run(payload req, TraceWriter log)
         {
-            log.Info($"C# HTTP trigger function processed a request. RequestUri={req.RequestUri}");
+            log.Info($"C# HTTP trigger function processed a request. Command used={req.SlackCommand}");
 
             double graphApiVersion = double.Parse(GetEnvironmentVariable("graphApiVersion"));
             string clientId = GetEnvironmentVariable("clientId");
@@ -22,14 +37,12 @@ namespace o365_compiled
             JObject e3SkuObject = new JObject();
             JObject e1SkuObject = new JObject();
 
-            string jsonContent = await req.Content.ReadAsStringAsync();
-            log.Info(jsonContent);
             // assign the Slack payload "text" to be the UPN of the user that needs the license
-            string username = (jsonContent.Split('&')[8]).Split('=')[1];
+            string username = req.SlackText;
             log.Info(username);
 
             // assign the Slack payload "channel_name" to the allowed channel name for this code to be called from
-            string channelName = (jsonContent.Split('&')[4]).Split('=')[1];
+            string channelName = req.SlackChannelName;
             if (channelName == allowedChannelName)
             {
                 // acquire Bearer Token for AD Application user through Graph API
@@ -153,9 +166,9 @@ namespace o365_compiled
 
     public class GetLicenseInfo
     {
-        public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
+        public static string Run(payload req, TraceWriter log)
         {
-            log.Info($"C# HTTP trigger function processed a request.RequestURI= {req.RequestUri}");
+            log.Info($"C# HTTP trigger function processed a request.Command used= {req.SlackCommand}");
             double graphApiVersion = double.Parse(GetEnvironmentVariable("graphApiVersion"));
             string clientId = GetEnvironmentVariable("clientId");
             string clientSecret = GetEnvironmentVariable("clientSecret");
@@ -163,14 +176,14 @@ namespace o365_compiled
             string allowedChannelName = GetEnvironmentVariable("allowedChannelName");
             string res = null;
 
-            string jsonContent = await req.Content.ReadAsStringAsync();
-
             // assign the Slack payload "text" to be the UPN of the user that needs the license
-            string username = (jsonContent.Split('&')[8]).Split('=')[1];
+            string username = req.SlackText;
+
+            log.Info(username);
             string encUserName = Uri.UnescapeDataString(username);
 
             // assign the Slack payload "channel_name" to the allowed channel name for this code to be called from
-            string channelName = (jsonContent.Split('&')[4]).Split('=')[1];
+            string channelName = req.SlackChannelName;
             if (channelName == allowedChannelName)
             {
                 // acquire Bearer Token for AD Application user through Graph API
