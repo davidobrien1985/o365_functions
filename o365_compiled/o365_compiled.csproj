@@ -104,12 +104,12 @@
     <Content Include="host.json" />
     <Content Include="LICENSE" />
     <Content Include="README.md" />
-    <Content Include="o365_slackbot\function.json" />
-    <Content Include="o365_slackbot\readme.md" />
+    <Content Include="receiveJobFromSlack\function.json" />
+    <Content Include="receiveJobFromSlack\readme.md" />
     <Compile Include="run.cs" />
     <Compile Include="shared_classes\AuthenticationHelperRest.cs" />
     <Compile Include="shared_classes\LicensingHelper.cs" />
-    <Content Include="o365_slackbot\run.csx" />
+    <Content Include="receiveJobFromSlack\run.csx" />
     <Content Include="deallocatelicense\function.json" />
     <Content Include="deallocatelicense\readme.md" />
     <Content Include="getlicenseinfo\function.json" />
