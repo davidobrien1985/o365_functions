@@ -97,6 +97,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="shared_classes\GenericHelper.cs" />
     <Compile Include="shared_classes\SubscriptionHelper.cs" />
     <Content Include="packages.config" />
     <Content Include=".gitignore" />
