@@ -19,11 +19,11 @@ namespace o365_compiled
             string skuId = null;
             string e3SkuId = null;
             string e1SkuId = null;
-            double graphApiVersion = double.Parse(GetEnvironmentVariable("graphApiVersion"));
-            string clientId = GetEnvironmentVariable("clientId");
-            string clientSecret = GetEnvironmentVariable("clientSecret");
-            string tenantId = GetEnvironmentVariable("tenantId");
-            string allowedChannelName = GetEnvironmentVariable("allowedChannelName");
+            double graphApiVersion = double.Parse(GenericHelper.GetEnvironmentVariable("graphApiVersion"));
+            string clientId = GenericHelper.GetEnvironmentVariable("clientId");
+            string clientSecret = GenericHelper.GetEnvironmentVariable("clientSecret");
+            string tenantId = GenericHelper.GetEnvironmentVariable("tenantId");
+            string allowedChannelName = GenericHelper.GetEnvironmentVariable("allowedChannelName");
             string res = null;
             JObject e3SkuObject = new JObject();
             JObject e1SkuObject = new JObject();
@@ -81,11 +81,6 @@ namespace o365_compiled
             }
             return res;
         }
-
-        public static string GetEnvironmentVariable(string name)
-        {
-            return System.Environment.GetEnvironmentVariable(name, EnvironmentVariableTarget.Process);
-        }
     }
 
     public class Deallocatelicense
@@ -94,11 +89,11 @@ namespace o365_compiled
         {
 
             log.Info($"C# HTTP trigger function processed a request.RequestURI= {req.RequestUri}");
-            double graphApiVersion = double.Parse(GetEnvironmentVariable("graphApiVersion"));
-            string clientId = GetEnvironmentVariable("clientId");
-            string clientSecret = GetEnvironmentVariable("clientSecret");
-            string tenantId = GetEnvironmentVariable("tenantId");
-            string allowedChannelName = GetEnvironmentVariable("allowedChannelName");
+            double graphApiVersion = double.Parse(GenericHelper.GetEnvironmentVariable("graphApiVersion"));
+            string clientId = GenericHelper.GetEnvironmentVariable("clientId");
+            string clientSecret = GenericHelper.GetEnvironmentVariable("clientSecret");
+            string tenantId = GenericHelper.GetEnvironmentVariable("tenantId");
+            string allowedChannelName = GenericHelper.GetEnvironmentVariable("allowedChannelName");
             JArray skus = null;
             string skuId = null;
             string e3SkuId = null;
@@ -154,11 +149,6 @@ namespace o365_compiled
 
             return res;
         }
-
-        public static string GetEnvironmentVariable(string name)
-        {
-            return System.Environment.GetEnvironmentVariable(name, EnvironmentVariableTarget.Process);
-        }
     }
 
     public class GetLicenseInfo
@@ -166,11 +156,11 @@ namespace o365_compiled
         public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
         {
             log.Info($"C# HTTP trigger function processed a request.RequestURI= {req.RequestUri}");
-            double graphApiVersion = double.Parse(GetEnvironmentVariable("graphApiVersion"));
-            string clientId = GetEnvironmentVariable("clientId");
-            string clientSecret = GetEnvironmentVariable("clientSecret");
-            string tenantId = GetEnvironmentVariable("tenantId");
-            string allowedChannelName = GetEnvironmentVariable("allowedChannelName");
+            double graphApiVersion = double.Parse(GenericHelper.GetEnvironmentVariable("graphApiVersion"));
+            string clientId = GenericHelper.GetEnvironmentVariable("clientId");
+            string clientSecret = GenericHelper.GetEnvironmentVariable("clientSecret");
+            string tenantId = GenericHelper.GetEnvironmentVariable("tenantId");
+            string allowedChannelName = GenericHelper.GetEnvironmentVariable("allowedChannelName");
             string res = null;
 
             string jsonContent = await req.Content.ReadAsStringAsync();
@@ -193,11 +183,6 @@ namespace o365_compiled
             }
             return res;
 
-        }
-
-        public static string GetEnvironmentVariable(string name)
-        {
-            return System.Environment.GetEnvironmentVariable(name, EnvironmentVariableTarget.Process);
         }
     }
 }
