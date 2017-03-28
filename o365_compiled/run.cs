@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs.Host;
 using Newtonsoft.Json.Linq;
 using o365_compiled.shared_classes;
-using System.Web;
 
 namespace o365_compiled
 {
