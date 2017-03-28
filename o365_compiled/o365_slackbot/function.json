@@ -10,6 +10,13 @@
       "direction": "in"
     },
     {
+      "name": "outputQueue",
+      "queueName": "jobsqueue",
+      "connection": "AzureWebJobsStorage",
+      "type": "queue",
+      "direction": "out"
+    },
+    {
       "name": "res",
       "type": "http",
       "direction": "out"
