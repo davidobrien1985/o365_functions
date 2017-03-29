@@ -101,7 +101,7 @@ namespace o365_compiled
                 string returnedUserName =
                       LicensingHelper.SetO365LicensingInfo(graphApiVersion, bearerToken, username, e3SkuId, e1SkuId);
 
-                var uri = myQueueItem.Response_Url;
+                var uri = Uri.UnescapeDataString(myQueueItem.Response_Url);
 
                 var jsonPayload = new
                 {
@@ -116,7 +116,8 @@ namespace o365_compiled
                 // not enough licenses, notify user
                 log.Info(
                     $"There are {purchasedLicenses} available E3 licenses and {usedLicenses} already used. No licenses available for E3. Please log on to portal.office.com and buy new licenses.");
-                var uri = myQueueItem.Response_Url;
+                var uri = Uri.UnescapeDataString(myQueueItem.Response_Url);
+                
                 log.Info(uri);
                 var jsonPayload = new
                 {
