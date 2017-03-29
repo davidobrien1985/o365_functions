@@ -115,6 +115,7 @@
     <Content Include="getlicenseinfo\function.json" />
     <Content Include="getlicenseinfo\run.csx" />
     <Content Include="deallocatelicense\run.csx" />
+    <Content Include="computeJobFromQueue\function.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
