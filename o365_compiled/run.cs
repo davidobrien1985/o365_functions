@@ -78,7 +78,7 @@ namespace o365_compiled
             log.Info(username);
             string command = Uri.EscapeDataString(myQueueItem.Command);
             log.Info(command);
-            if (command == "/allocatee3o365")
+            if (command == "%252Fallocatee3o365")
             {
 
                 // acquire Bearer Token for AD Application user through Graph API
@@ -132,11 +132,11 @@ namespace o365_compiled
                     GenericHelper.SendMessageToSlack(uri, jsonPayload);
                 }
             }
-            else if (command == "/deallocatee3o365")
+            else if (command == "%252Fdeallocatee3o365")
             {
                 Deallocatelicense.Run(myQueueItem, log);
             }
-            else if (command == "/geto365userlicense")
+            else if (command == "%252Fgeto365userlicense")
             {
                 GetLicenseInfo.Run(myQueueItem, log);
             }
