@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using o365_compiled.shared_classes;
 
@@ -60,6 +62,33 @@ namespace o365_compiled
         }
     }
 
+    public class SlackClient
+    {
+        private readonly Uri _webhookUrl;
+        private readonly HttpClient _httpClient = new HttpClient();
+
+        public SlackClient(Uri webhookUrl)
+        {
+            _webhookUrl = webhookUrl;
+        }
+
+        public async Task<HttpResponseMessage> SendMessageAsync(string message,
+            string channel = null, string username = null)
+        {
+            var payload = new
+            {
+                text = message,
+                channel,
+                username,
+            };
+            var serializedPayload = JsonConvert.SerializeObject(payload);
+            var response = await _httpClient.PostAsync(_webhookUrl,
+                new StringContent(serializedPayload, Encoding.UTF8, "application/json"));
+
+            return response;
+        }
+    }
+
     public class ComputeJobFromQueue
     {
         public static void Run(payload myQueueItem, TraceWriter log)
@@ -102,10 +131,12 @@ namespace o365_compiled
 
                 var jsonPayload = $"text\": \"There are {purchasedLicenses} available E3 licenses and {usedLicenses} already used. You have just used one more. Successfully assigned *E3* license to {returnedUserName}\"";
 
-                using (var client = new WebClient())
+                var webhookUrl = new Uri(uri);
+                var slackClient = new SlackClient(webhookUrl);
+                while (true)
                 {
-                    client.Headers[HttpRequestHeader.ContentType] = "application/json";
-                    client.UploadString(uri, "POST", jsonPayload);
+                    var message = jsonPayload;
+                    slackClient.SendMessageAsync(message);
                 }
 
             }
@@ -117,10 +148,12 @@ namespace o365_compiled
                 var uri = myQueueItem.Response_Url;
                 var jsonPayload = $"text\": \"There are {purchasedLicenses} available E3 licenses and {usedLicenses} already used. No licenses available for E3. Please log on to portal.office.com and buy new licenses.\"";
 
-                using (var client = new WebClient())
+                var webhookUrl = new Uri(uri);
+                var slackClient = new SlackClient(webhookUrl);
+                while (true)
                 {
-                    client.Headers[HttpRequestHeader.ContentType] = "application/json";
-                    client.UploadString(uri, "POST", jsonPayload);
+                    var message = jsonPayload;
+                    slackClient.SendMessageAsync(message);
                 }
             }     
         }
