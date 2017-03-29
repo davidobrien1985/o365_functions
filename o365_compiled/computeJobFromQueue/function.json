@@ -1,0 +1,19 @@
+{
+  "disabled": false,
+  "scriptFile": "..\\bin\\o365_compiled.dll",
+  "entryPoint": "o365_compiled.ComputeJobFromQueue.Run",
+  "bindings": [
+    {
+      "name": "myQueueItem",
+      "queueName": "jobsqueue",
+      "connection": "AzureWebJobsStorage",
+      "type": "queueTrigger",
+      "direction": "in"
+    },
+    {
+      "name": "$return",
+      "type": "http",
+      "direction": "out"
+    }
+  ]
+}

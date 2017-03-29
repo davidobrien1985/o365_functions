@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using Microsoft.Azure.WebJobs.Host;
 using Newtonsoft.Json.Linq;
 using o365_compiled.shared_classes;
@@ -26,17 +27,9 @@ namespace o365_compiled
         {
             log.Info($"C# HTTP trigger function processed a request. Command used={req.Command}");
 
-            double graphApiVersion = double.Parse(GenericHelper.GetEnvironmentVariable("graphApiVersion"));
-            string clientId = GenericHelper.GetEnvironmentVariable("clientId");
-            string clientSecret = GenericHelper.GetEnvironmentVariable("clientSecret");
-            string tenantId = GenericHelper.GetEnvironmentVariable("tenantId");
             string allowedChannelName = GenericHelper.GetEnvironmentVariable("allowedChannelName");
             string res = null;
             outputQueue = null;
-
-            // assign the Slack payload "text" to be the UPN of the user that needs the license
-            string username = req.Text;
-            log.Info(username);
 
             // assign the Slack payload "channel_name" to the allowed channel name for this code to be called from
             string channelName = req.Channel_Name;
@@ -44,50 +37,75 @@ namespace o365_compiled
             {
 
                 outputQueue = req;
-                // acquire Bearer Token for AD Application user through Graph API
-                //    string token = AuthenticationHelperRest.AcquireTokenBySpn(tenantId, clientId, clientSecret);
-                //    string bearerToken = "Bearer " + token;
-
-                //    log.Info("Getting License SKUs...");
-                //    // get information about all the O365 SKUs available
-                //    JArray skus = LicensingHelper.GetO365Skus(graphApiVersion, bearerToken);
-                //    JObject e1SkuObject = SubscriptionHelper.FilterSkusByPartNumber(skus, "STANDARDPACK");
-                //    JObject e3SkuObject = SubscriptionHelper.FilterSkusByPartNumber(skus, "ENTERPRISEPACK");
-
-                //    string e1SkuId = (string) e1SkuObject["skuId"];
-                //    string e3SkuId = (string) e3SkuObject["skuId"];
-
-                //    int usedLicenses = e3SkuObject.GetValue("consumedUnits").Value<int>();
-                //    int purchasedLicenses = e3SkuObject.SelectToken(@"prepaidUnits.enabled").Value<int>();
-
-                //    // check if enough licenses available
-                //    if (usedLicenses < purchasedLicenses)
-                //    {
-                //        // enough licenses, so do it
-                //        log.Info("Setting License...");
-                //        string returnedUserName =
-                //            LicensingHelper.SetO365LicensingInfo(graphApiVersion, bearerToken, username, e3SkuId, e1SkuId);
-                //        res =
-                //            $"There are {purchasedLicenses} available E3 licenses and {usedLicenses} already used. You have just used one more." +
-                //            $"Successfully assigned *E3* license to {returnedUserName}";
-                //    }
-                //    else
-                //    {
-                //        // not enough licenses, notify user
-                //        log.Info(
-                //            $"There are {purchasedLicenses} available E3 licenses and {usedLicenses} already used. No licenses available for E3. Please log on to portal.office.com and buy new licenses.");
-                //        res =
-                //            $"There are {purchasedLicenses} available E3 licenses and {usedLicenses} already used. No licenses available for E3. Please log on to portal.office.com and buy new licenses.";
-                //    }
-                //}
-                //else
-                //{
-                //    res =
-                //        $"The channel {channelName} is not allowed to execute this function. Sorry. Get in touch with your O365 admin.";
-                //}
                 res = $"Hey, {req.User_Name}, I'm working on assigning the license. I'll let you know when I'm done...";
             }
             return res;
+        }
+    }
+
+    public class ComputeJobFromQueue
+    {
+        public static void Run(payload myQueueItem, TraceWriter log)
+        {
+            log.Info($"C# Queue trigger function processed: {myQueueItem.User_Name}");
+            double graphApiVersion = double.Parse(GenericHelper.GetEnvironmentVariable("graphApiVersion"));
+            string clientId = GenericHelper.GetEnvironmentVariable("clientId");
+            string clientSecret = GenericHelper.GetEnvironmentVariable("clientSecret");
+            string tenantId = GenericHelper.GetEnvironmentVariable("tenantId");
+
+            // assign the Slack payload "text" to be the UPN of the user that needs the license
+            string username = myQueueItem.Text;
+            log.Info(username);
+
+            // acquire Bearer Token for AD Application user through Graph API
+            string token = AuthenticationHelperRest.AcquireTokenBySpn(tenantId, clientId, clientSecret);
+            string bearerToken = "Bearer " + token;
+
+            log.Info("Getting License SKUs...");
+            // get information about all the O365 SKUs available
+            JArray skus = LicensingHelper.GetO365Skus(graphApiVersion, bearerToken);
+            JObject e1SkuObject = SubscriptionHelper.FilterSkusByPartNumber(skus, "STANDARDPACK");
+            JObject e3SkuObject = SubscriptionHelper.FilterSkusByPartNumber(skus, "ENTERPRISEPACK");
+
+            string e1SkuId = (string) e1SkuObject["skuId"];
+            string e3SkuId = (string) e3SkuObject["skuId"];
+
+            int usedLicenses = e3SkuObject.GetValue("consumedUnits").Value<int>();
+            int purchasedLicenses = e3SkuObject.SelectToken(@"prepaidUnits.enabled").Value<int>();
+
+            // check if enough licenses available
+            if (usedLicenses < purchasedLicenses)
+            {
+                // enough licenses, so do it
+                log.Info("Setting License...");
+                string returnedUserName =
+                      LicensingHelper.SetO365LicensingInfo(graphApiVersion, bearerToken, username, e3SkuId, e1SkuId);
+
+                var uri = myQueueItem.Response_Url;
+
+                var jsonPayload = $"text\": \"There are {purchasedLicenses} available E3 licenses and {usedLicenses} already used. You have just used one more. Successfully assigned *E3* license to {returnedUserName}\"";
+
+                using (var client = new WebClient())
+                {
+                    client.Headers[HttpRequestHeader.ContentType] = "application/json";
+                    client.UploadString(uri, "POST", jsonPayload);
+                }
+
+            }
+            else
+            {
+                // not enough licenses, notify user
+                log.Info(
+                    $"There are {purchasedLicenses} available E3 licenses and {usedLicenses} already used. No licenses available for E3. Please log on to portal.office.com and buy new licenses.");
+                var uri = myQueueItem.Response_Url;
+                var jsonPayload = $"text\": \"There are {purchasedLicenses} available E3 licenses and {usedLicenses} already used. No licenses available for E3. Please log on to portal.office.com and buy new licenses.\"";
+
+                using (var client = new WebClient())
+                {
+                    client.Headers[HttpRequestHeader.ContentType] = "application/json";
+                    client.UploadString(uri, "POST", jsonPayload);
+                }
+            }     
         }
     }
 
