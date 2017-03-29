@@ -76,8 +76,9 @@ namespace o365_compiled
             // assign the Slack payload "text" to be the UPN of the user that needs the license
             string username = myQueueItem.Text;
             log.Info(username);
-
-            if (myQueueItem.Command == "%2Fallocatee3o365")
+            string command = Uri.EscapeDataString(myQueueItem.Command);
+            log.Info(command);
+            if (command == "/allocatee3o365")
             {
 
                 // acquire Bearer Token for AD Application user through Graph API
@@ -131,11 +132,11 @@ namespace o365_compiled
                     GenericHelper.SendMessageToSlack(uri, jsonPayload);
                 }
             }
-            else if (myQueueItem.Command == "%2deallocatee3o365")
+            else if (command == "/deallocatee3o365")
             {
                 Deallocatelicense.Run(myQueueItem, log);
             }
-            else if (myQueueItem.Command == "%2geto365userlicense")
+            else if (command == "/geto365userlicense")
             {
                 GetLicenseInfo.Run(myQueueItem, log);
             }
