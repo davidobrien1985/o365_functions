@@ -26,25 +26,36 @@ namespace o365_compiled
 
     public class run
     {
-        public static async Task<string> Run(HttpRequestMessage req, TraceWriter log, IAsyncCollector<string> outputQueue)
+        public static async Task<string> Run(HttpRequestMessage req, TraceWriter log, IAsyncCollector<payload> outputQueue)
         {
             log.Info($"C# HTTP trigger function processed a request. Command used={req.RequestUri}");
 
             string jsonContent = await req.Content.ReadAsStringAsync();
             log.Info(jsonContent);
-            string username = (jsonContent.Split('&')[8]).Split('=')[1];
-            log.Info(username);
             string allowedChannelName = GenericHelper.GetEnvironmentVariable("allowedChannelName");
             string res = null;
-
+            
             // assign the Slack payload "channel_name" to the allowed channel name for this code to be called from
-            //string channelName = req.Channel_Name;
-            //if (channelName == allowedChannelName)
-            //{
+            string channelName = (jsonContent.Split('&')[4]).Split('=')[1];
+            if (channelName == allowedChannelName)
+            {
+                payload json = new payload
+                {
+                    Token = (jsonContent.Split('&')[0]).Split('=')[1],
+                    Team_Id = (jsonContent.Split('&')[1]).Split('=')[1],
+                    Team_Domain = (jsonContent.Split('&')[2]).Split('=')[1],
+                    Channel_Id = (jsonContent.Split('&')[3]).Split('=')[1],
+                    Channel_Name = (jsonContent.Split('&')[4]).Split('=')[1],
+                    User_Id = (jsonContent.Split('&')[5]).Split('=')[1],
+                    User_Name = (jsonContent.Split('&')[6]).Split('=')[1],
+                    Command = (jsonContent.Split('&')[7]).Split('=')[1],
+                    Text = (jsonContent.Split('&')[8]).Split('=')[1],
+                    Response_Url = (jsonContent.Split('&')[9]).Split('=')[1]
+                };
 
-            await outputQueue.AddAsync(jsonContent);
-            res = $"Hey, {username}, I'm working on assigning the license. I'll let you know when I'm done...";
-            //}
+                await outputQueue.AddAsync(json);
+                res = $"Hey, {json.User_Name}, I'm working on assigning the license. I'll let you know when I'm done...";
+            }
             return res;
         }
     }
