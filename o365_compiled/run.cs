@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using Newtonsoft.Json.Linq;
 using o365_compiled.shared_classes;
@@ -23,22 +26,25 @@ namespace o365_compiled
 
     public class run
     {
-        public static string Run(payload req, TraceWriter log, out payload outputQueue)
+        public static async Task<string> Run(HttpRequestMessage req, TraceWriter log, IAsyncCollector<string> outputQueue)
         {
-            log.Info($"C# HTTP trigger function processed a request. Command used={req.Command}");
+            log.Info($"C# HTTP trigger function processed a request. Command used={req.RequestUri}");
 
+            string jsonContent = await req.Content.ReadAsStringAsync();
+            log.Info(jsonContent);
+            string username = (jsonContent.Split('&')[8]).Split('=')[1];
+            log.Info(username);
             string allowedChannelName = GenericHelper.GetEnvironmentVariable("allowedChannelName");
             string res = null;
-            outputQueue = null;
 
             // assign the Slack payload "channel_name" to the allowed channel name for this code to be called from
-            string channelName = req.Channel_Name;
-            if (channelName == allowedChannelName)
-            {
+            //string channelName = req.Channel_Name;
+            //if (channelName == allowedChannelName)
+            //{
 
-                outputQueue = req;
-                res = $"Hey, {req.User_Name}, I'm working on assigning the license. I'll let you know when I'm done...";
-            }
+            await outputQueue.AddAsync(jsonContent);
+            res = $"Hey, {username}, I'm working on assigning the license. I'll let you know when I'm done...";
+            //}
             return res;
         }
     }
