@@ -117,7 +117,7 @@ namespace o365_compiled
                 log.Info(
                     $"There are {purchasedLicenses} available E3 licenses and {usedLicenses} already used. No licenses available for E3. Please log on to portal.office.com and buy new licenses.");
                 var uri = myQueueItem.Response_Url;
-
+                log.Info(uri);
                 var jsonPayload = new
                 {
                     text = $"There are {purchasedLicenses} available E3 licenses and {usedLicenses} already used. No licenses available for E3. Please log on to portal.office.com and buy new licenses."
