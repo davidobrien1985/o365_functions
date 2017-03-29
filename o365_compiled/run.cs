@@ -161,7 +161,7 @@ namespace o365_compiled
 
             // assign the Slack payload "channel_name" to the allowed channel name for this code to be called from
             string channelName = req.Channel_Name;
-            if (channelName == allowedChannelName)
+            if (channelName == allowedChannelName && req.User_Name == "david")
             {
                 // acquire Bearer Token for AD Application user through Graph API
                 string token = AuthenticationHelperRest.AcquireTokenBySpn(tenantId, clientId, clientSecret);
