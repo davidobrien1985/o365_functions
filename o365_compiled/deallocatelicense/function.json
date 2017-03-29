@@ -1,5 +1,5 @@
 {
-  "disabled": false,
+  "disabled": true,
   "scriptFile": "..\\bin\\o365_compiled.dll",
   "entryPoint": "o365_compiled.Deallocatelicense.Run",
   "bindings": [
