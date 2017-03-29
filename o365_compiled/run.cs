@@ -107,9 +107,8 @@ namespace o365_compiled
                 {
                     text = $"There are {purchasedLicenses} available E3 licenses and {usedLicenses} already used. You have just used one more. Successfully assigned *E3* license to {returnedUserName}"
                 };
-                var serializedPayload = JsonConvert.SerializeObject(jsonPayload);
-                HttpClient client = new HttpClient();
-                var response = client.PostAsync(uri,new StringContent(serializedPayload,Encoding.UTF8, "application/json")).Result;
+
+                GenericHelper.SendMessageToSlack(uri, jsonPayload);
             }
             else
             {
@@ -124,9 +123,7 @@ namespace o365_compiled
                     text = $"There are {purchasedLicenses} available E3 licenses and {usedLicenses} already used. No licenses available for E3. Please log on to portal.office.com and buy new licenses."
                 };
 
-                var serializedPayload = JsonConvert.SerializeObject(jsonPayload);
-                HttpClient client = new HttpClient();
-                var response = client.PostAsync(uri, new StringContent(serializedPayload, Encoding.UTF8, "application/json")).Result;
+                GenericHelper.SendMessageToSlack(uri, jsonPayload);
             }     
         }
     }
