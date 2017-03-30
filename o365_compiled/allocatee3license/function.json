@@ -1,11 +1,11 @@
 {
   "disabled": false,
   "scriptFile": "..\\bin\\o365_compiled.dll",
-  "entryPoint": "o365_compiled.ComputeJobFromQueue.Run",
+  "entryPoint": "o365_compiled.AllocateE3License.Run",
   "bindings": [
     {
-      "name": "myQueueItem",
-      "queueName": "jobsqueue",
+      "name": "allocatee3o365",
+      "queueName": "allocatee3o365",
       "connection": "AzureWebJobsStorage",
       "type": "queueTrigger",
       "direction": "in"

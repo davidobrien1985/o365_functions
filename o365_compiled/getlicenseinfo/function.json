@@ -1,12 +1,13 @@
 {
-  "disabled": true,
+  "disabled": false,
   "scriptFile": "..\\bin\\o365_compiled.dll",
   "entryPoint": "o365_compiled.GetLicenseInfo.Run",
   "bindings": [
     {
-      "authLevel": "function",
-      "name": "req",
-      "type": "httpTrigger",
+      "name": "geto365userlicense",
+      "queueName": "geto365userlicense",
+      "connection": "AzureWebJobsStorage",
+      "type": "queueTrigger",
       "direction": "in"
     },
     {

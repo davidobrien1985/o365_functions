@@ -10,8 +10,22 @@
       "direction": "in"
     },
     {
-      "name": "outputQueue",
-      "queueName": "jobsqueue",
+      "name": "geto365userlicense",
+      "queueName": "geto365userlicense",
+      "connection": "AzureWebJobsStorage",
+      "type": "queue",
+      "direction": "out"
+    },
+    {
+      "name": "deallocatee3o365",
+      "queueName": "deallocatee3o365",
+      "connection": "AzureWebJobsStorage",
+      "type": "queue",
+      "direction": "out"
+    },
+    {
+      "name": "allocatee3o365",
+      "queueName": "allocatee3o365",
       "connection": "AzureWebJobsStorage",
       "type": "queue",
       "direction": "out"
