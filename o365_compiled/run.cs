@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using o365_compiled.shared_classes;
 
