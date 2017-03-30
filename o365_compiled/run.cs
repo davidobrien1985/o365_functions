@@ -59,20 +59,20 @@ namespace o365_compiled
 
                 string command = Uri.EscapeDataString(json.Command);
 
-                if (command == "%252Fallocatee3o365")
+                switch (command)
                 {
-                    // add to allocateE3O365 queue
-                    await allocatee3o365.AddAsync(json);
-                }
-                else if (command == "%252Fdeallocatee3o365")
-                {
-                    // add to deallocatee3o365 queue
-                    await deallocatee3o365.AddAsync(json);
-                }
-                else if (command == "%252Fgeto365userlicense")
-                {
-                    // add to geto365userlicense queue
-                    await geto365userlicense.AddAsync(json);
+                    case "%252Fallocatee3o365":
+                        // add to allocateE3O365 queue
+                        await allocatee3o365.AddAsync(json);
+                        break;
+                    case "%252Fdeallocatee3o365":
+                        // add to deallocatee3o365 queue
+                        await deallocatee3o365.AddAsync(json);
+                        break;
+                    case "%252Fgeto365userlicense":
+                        // add to geto365userlicense queue
+                        await geto365userlicense.AddAsync(json);
+                        break;
                 }
                 
                 res = $"Hey, {json.User_Name}, I'm working on assigning the license. I'll let you know when I'm done...";
