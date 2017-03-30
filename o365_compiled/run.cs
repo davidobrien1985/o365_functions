@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using o365_compiled.shared_classes;
 
@@ -25,7 +26,7 @@ namespace o365_compiled
 
     public class run
     {
-        public static async Task<string> Run(HttpRequestMessage req, TraceWriter log, IAsyncCollector<payload> allocatee3o365, IAsyncCollector<payload> geto365userlicense, IAsyncCollector<payload> deallocatee3o365)
+        public static async Task<string> Run(HttpRequestMessage req, TraceWriter log, IAsyncCollector<payload> allocatee3o365, IAsyncCollector<payload> geto365userlicense, IAsyncCollector<payload> deallocatee3o365, ICollector<string> outputDocument)
         {
             log.Info($"C# HTTP trigger function processed a request. Command used={req.RequestUri}");
 
@@ -52,6 +53,10 @@ namespace o365_compiled
                     Text = (jsonContent.Split('&')[8]).Split('=')[1],
                     Response_Url = (jsonContent.Split('&')[9]).Split('=')[1]
                 };
+
+                string document = JsonConvert.SerializeObject(json);
+                outputDocument.Add(document);
+
                 string command = Uri.EscapeDataString(json.Command);
 
                 if (command == "%252Fallocatee3o365")

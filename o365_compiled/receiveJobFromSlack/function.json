@@ -31,6 +31,15 @@
       "direction": "out"
     },
     {
+      "type": "documentDB",
+      "name": "outputDocument",
+      "databaseName": "versent-o365",
+      "collectionName": "versent-slack",
+      "createIfNotExists": true,
+      "connection": "versent_slack_DocumentDB",
+      "direction": "out"
+    },
+    {
       "name": "res",
       "type": "http",
       "direction": "out"
