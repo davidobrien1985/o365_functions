@@ -253,6 +253,7 @@ namespace o365_compiled
                     LicensingHelper.GetUserLicenseInfo(graphApiVersion, encUserName, bearerToken, log);
 
                 var uri = Uri.UnescapeDataString(geto365userlicense.Response_Url);
+                log.Info("in_channel response");
                 var jsonPayload = new
                 {
                     response_type = "in_channel",
