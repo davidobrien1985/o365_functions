@@ -103,7 +103,6 @@
     <Content Include=".gitignore" />
     <Content Include="host.json" />
     <Content Include="LICENSE" />
-    <Content Include="README.md" />
     <Content Include="receiveJobFromSlack\function.json" />
     <Content Include="receiveJobFromSlack\readme.md" />
     <Compile Include="run.cs" />
