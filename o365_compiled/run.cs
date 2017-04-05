@@ -124,6 +124,7 @@ namespace o365_compiled
 
                 var jsonPayload = new
                 {
+                    response_type = "in_channel",
                     text =
                     $"There are {purchasedLicenses} available E3 licenses and {usedLicenses} already used. You have just used one more. Successfully assigned *E3* license to {returnedUserName}"
                 };
@@ -140,6 +141,7 @@ namespace o365_compiled
                 log.Info(uri);
                 var jsonPayload = new
                 {
+                    response_type = "in_channel",
                     text =
                     $"There are {purchasedLicenses} available E3 licenses and {usedLicenses} already used. No licenses available for E3. Please log on to portal.office.com and buy new licenses."
                 };
@@ -196,6 +198,7 @@ namespace o365_compiled
                     var uri = Uri.UnescapeDataString(deallocatee3o365.Response_Url);
                     var jsonPayload = new
                     {
+                        response_type = "in_channel",
                         text =
                         $"There are {purchasedLicenses} available E1 licenses and {usedLicenses} already used. You have just used one more." +
                         $"Successfully assigned *E1* license to {returnedUserName}"
@@ -212,6 +215,7 @@ namespace o365_compiled
                     var uri = Uri.UnescapeDataString(deallocatee3o365.Response_Url);
                     var jsonPayload = new
                     {
+                        response_type = "in_channel",
                         text =
                         $"There are {purchasedLicenses} available E1 licenses and {usedLicenses} already used. No licenses available for E1. Please log on to portal.office.com and buy new licenses."
                     };
@@ -251,6 +255,7 @@ namespace o365_compiled
                 var uri = Uri.UnescapeDataString(geto365userlicense.Response_Url);
                 var jsonPayload = new
                 {
+                    response_type = "in_channel",
                     text = $"{encUserName} is licensed with the {skuPartNumber} license."
                 };
 
