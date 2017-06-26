@@ -26,7 +26,7 @@ namespace o365_compiled
 
     public class run
     {
-        public static async Task<string> Run(HttpRequestMessage req, TraceWriter log, IAsyncCollector<payload> allocatee3o365, IAsyncCollector<payload> geto365userlicense, IAsyncCollector<payload> deallocatee3o365, ICollector<string> outputDocument)
+        public static async Task<string> Run(HttpRequestMessage req, TraceWriter log, IAsyncCollector<payload> allocatevisio, IAsyncCollector<payload> allocatee3o365, IAsyncCollector<payload> geto365userlicense, IAsyncCollector<payload> deallocatee3o365, ICollector<string> outputDocument)
         {
             log.Info($"C# HTTP trigger function processed a request. Command used={req.RequestUri}");
 
@@ -73,6 +73,11 @@ namespace o365_compiled
                         // add to geto365userlicense queue
                         await geto365userlicense.AddAsync(json);
                         break;
+                    case "%252Fallocatevisio":
+                        // add to allocatevisio queue
+                        await allocatevisio.AddAsync(json);
+                        break;    
+                    
                 }
                 
                 res = $"Hey, {json.User_Name}, I'm working on assigning the license. I'll let you know when I'm done...";
@@ -81,7 +86,74 @@ namespace o365_compiled
         }
     }
 
-    
+    public class AllocateVisioLicense
+    {
+        public static void Run(payload allocatevisio, TraceWriter log)
+        {
+            log.Info($"C# Queue trigger function processed: {allocatevisio.User_Name}");
+            double graphApiVersion = double.Parse(GenericHelper.GetEnvironmentVariable("graphApiVersion"));
+            string clientId = GenericHelper.GetEnvironmentVariable("clientId");
+            string clientSecret = GenericHelper.GetEnvironmentVariable("clientSecret");
+            string tenantId = GenericHelper.GetEnvironmentVariable("tenantId");
+
+            // assign the Slack payload "text" to be the UPN of the user that needs the license
+            string username = allocatevisio.Text;
+            log.Info(username);
+
+            // acquire Bearer Token for AD Application user through Graph API
+            string token = AuthenticationHelperRest.AcquireTokenBySpn(tenantId, clientId, clientSecret);
+            string bearerToken = "Bearer " + token;
+
+            log.Info("Getting License SKUs...");
+            // get information about all the O365 SKUs available
+            JArray skus = LicensingHelper.GetO365Skus(graphApiVersion, bearerToken);
+            JObject visioSkuObject = SubscriptionHelper.FilterSkusByPartNumber(skus, "VISIO_CLIENT_SUBSCRIPTION");
+
+            string visioSkuId = (string)visioSkuObject["skuId"];
+
+            int usedLicenses = visioSkuObject.GetValue("consumedUnits").Value<int>();
+            int purchasedLicenses = visioSkuObject.SelectToken(@"prepaidUnits.enabled").Value<int>();
+
+            // check if enough licenses available
+            if (usedLicenses < purchasedLicenses)
+            {
+                // enough licenses, so do it
+                log.Info("Setting License...");
+                string returnedUserName =
+                    LicensingHelper.SetO365LicensingInfo(graphApiVersion, bearerToken, username, visioSkuId, null);
+
+                var uri = Uri.UnescapeDataString(allocatevisio.Response_Url);
+
+                var jsonPayload = new
+                {
+                    response_type = "in_channel",
+                    text =
+                    $"There are {purchasedLicenses} available VISIO licenses and {usedLicenses} already used. You have just used one more. Successfully assigned *VISIO* license to {returnedUserName}"
+                };
+
+                GenericHelper.SendMessageToSlack(uri, jsonPayload);
+            }
+            else
+            {
+                // not enough licenses, notify user
+                log.Info(
+                    $"There are {purchasedLicenses} available VISIO licenses and {usedLicenses} already used. No licenses available for VISIO. Please log on to portal.office.com and buy new licenses.");
+                var uri = Uri.UnescapeDataString(allocatevisio.Response_Url);
+
+                log.Info(uri);
+                var jsonPayload = new
+                {
+                    response_type = "in_channel",
+                    text =
+                    $"There are {purchasedLicenses} available VISIO licenses and {usedLicenses} already used. No licenses available for VISIO. Please log on to portal.office.com and buy new licenses."
+                };
+
+                GenericHelper.SendMessageToSlack(uri, jsonPayload);
+            }
+        }
+    }
+
+
     public class AllocateE3License
     {
         public static void Run(payload allocatee3o365, TraceWriter log)
