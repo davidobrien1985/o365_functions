@@ -31,6 +31,13 @@
       "direction": "out"
     },
     {
+      "name": "allocatevisio",
+      "queueName": "allocatevisio",
+      "connection": "AzureWebJobsStorage",
+      "type": "queue",
+      "direction": "out"
+    },
+    {
       "type": "documentDB",
       "name": "outputDocument",
       "databaseName": "versent-o365",
