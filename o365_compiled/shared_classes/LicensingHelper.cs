@@ -39,7 +39,17 @@ namespace o365_compiled.shared_classes
 
             var uri = $"https://graph.windows.net/myorganization/users/{userEmail}/assignLicense?api-version={apiVersion}";
 
-            var jsonPayload = $"{{\"addLicenses\": [{{\"disabledPlans\": [],\"skuId\": \"{addSkuId}\"}}],\"removeLicenses\": [\"{removeSkuId}\"]}}";
+            string _removeSkuId;
+            if (string.IsNullOrEmpty(removeSkuId))
+            {
+                _removeSkuId = "[]";
+            }
+            else
+            {
+                _removeSkuId = $"[\"{removeSkuId}\"]";
+            }
+
+            var jsonPayload = $"{{\"addLicenses\": [{{\"disabledPlans\": [],\"skuId\": \"{addSkuId}\"}}],\"removeLicenses\": {_removeSkuId}}}";
 
             string result = "";
             using (var client = new WebClient())
