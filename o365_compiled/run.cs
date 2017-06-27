@@ -107,7 +107,7 @@ namespace o365_compiled
             log.Info("Getting License SKUs...");
             // get information about all the O365 SKUs available
             JArray skus = LicensingHelper.GetO365Skus(graphApiVersion, bearerToken);
-            JObject visioSkuObject = SubscriptionHelper.FilterSkusByPartNumber(skus, "VISIO_CLIENT_SUBSCRIPTION");
+            JObject visioSkuObject = SubscriptionHelper.FilterSkusByPartNumber(skus, "VISIOCLIENT");
 
             string visioSkuId = (string)visioSkuObject["skuId"];
 
