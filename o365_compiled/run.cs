@@ -120,7 +120,7 @@ namespace o365_compiled
                 // enough licenses, so do it
                 log.Info("Setting License...");
                 string returnedUserName =
-                    LicensingHelper.SetO365LicensingInfo(graphApiVersion, bearerToken, username, visioSkuId, null);
+                    LicensingHelper.SetO365LicensingInfo(graphApiVersion, bearerToken, username, visioSkuId, "");
 
                 var uri = Uri.UnescapeDataString(allocatevisio.Response_Url);
 

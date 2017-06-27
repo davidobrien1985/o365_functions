@@ -34,7 +34,7 @@ namespace o365_compiled.shared_classes
             return jObject.GetValue("value").Value<JArray>();
         }
 
-        public static string SetO365LicensingInfo(double apiVersion, string apiToken, string userEmail, string addSkuId, string removeSkuId)
+        public static string SetO365LicensingInfo(double apiVersion, string apiToken, string userEmail, string addSkuId, string removeSkuId = "")
         {
 
             var uri = $"https://graph.windows.net/myorganization/users/{userEmail}/assignLicense?api-version={apiVersion}";
