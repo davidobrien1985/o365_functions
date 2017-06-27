@@ -113,6 +113,7 @@
     <Content Include="getlicenseinfo\function.json" />
     <Content Include="allocatee3license\function.json" />
     <Content Include="allocatevisio\function.json" />
+    <Content Include="proxies.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

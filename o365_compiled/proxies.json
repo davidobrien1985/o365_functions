@@ -1,12 +1,13 @@
 {
   "$schema": "http://json.schemastore.org/proxies",
   "proxies": {
-    "proxy1": {
+    "slackproxy": {
       "matchCondition": {
         "methods": [ "POST" ],
         "route": "/api/o365bot"
       },
-      "backendUri": "https://%WEBSITE_SITE_NAME%.azurewebsites.net/api/receiveJobFromSlack?code=%receiveSlackFunctionKey%"
+      "backendUri": "https://%WEBSITE_SITE_NAME%.azurewebsites.net/api/receiveJobFromSlack?code=%receiveSlackFunctionKey%",
+      "debug": true
     }
   }
 }
